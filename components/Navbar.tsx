@@ -1,3 +1,4 @@
+import Image from "next/image";
 import Link from "next/link";
 
 const Navbar = () => {
@@ -7,7 +8,15 @@ const Navbar = () => {
                 href="/"
                 className="text-lg font-semibold tracking-tight text-white"
             >
-                SignalStack
+            <div className="flex items-center justify-center gap-4">
+                <Image
+                    src="/logo.png"
+                    alt="logo"
+                    width={50}
+                    height={50}
+                />
+                <p>SignalStack</p>
+            </div>
             </Link>
 
             <div className="flex items-center gap-3">
