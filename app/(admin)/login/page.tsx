@@ -33,8 +33,8 @@ const LoginPage = () => {
                             Your operations, in focus.
                         </h1>
                         <p className="mt-5 max-w-xs text-sm leading-6 text-slate-200/80">
-                            One clear view of the people, projects, and decisions
-                            keeping your work moving forward.
+                            One clear view of the people, projects, and
+                            decisions keeping your work moving forward.
                         </p>
                     </div>
                 </div>
