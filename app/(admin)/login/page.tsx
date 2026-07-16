@@ -23,9 +23,6 @@ const LoginPage = () => {
                 <div className="relative z-20 flex min-h-[480px] flex-col justify-between p-6 sm:p-10 lg:min-h-screen lg:p-12">
                     <div className="flex items-center justify-between text-xs font-semibold uppercase tracking-[0.24em] text-white/70">
                         <span>SignalStack</span>
-                        <span className="rounded-full border border-white/20 px-3 py-1 text-[10px] tracking-[0.18em]">
-                            Secure access
-                        </span>
                     </div>
 
                     <div className="max-w-sm">
