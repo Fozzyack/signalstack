@@ -1,8 +1,63 @@
 "use client";
 
+import { getBackendURL, getTokenName } from "@/lib/getEnvVars";
 import Link from "next/link";
+import { useState } from "react";
 
 const LoginPage = () => {
+    const [email, setEmail] = useState("");
+    const [password, setPassword] = useState("");
+    const [error, setError] = useState("");
+    const [success, setSuccess] = useState("");
+    const [isSubmitting, setIsSubmitting] = useState(false);
+
+    const handleChangeEmail = (event: React.ChangeEvent<HTMLInputElement>) => {
+        setEmail(event.target.value);
+    };
+
+    const handleChangePassword = (event: React.ChangeEvent<HTMLInputElement>) => {
+        setPassword(event.target.value);
+    };
+
+    const handleSubmit = async (event: React.SubmitEvent<HTMLFormElement>) => {
+        event.preventDefault();
+        if (isSubmitting) return;
+
+        setError("");
+        setSuccess("");
+        setIsSubmitting(true);
+
+        try {
+            const res = await fetch(`${getBackendURL()}/auth/login`, {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json",
+                },
+                body: JSON.stringify({
+                    email,
+                    password,
+                }),
+            });
+
+            const data = await res.json().catch(() => null);
+
+            if (!res.ok) {
+                setError(data?.error ?? "Invalid credentials");
+                return;
+            }
+
+            localStorage.setItem(getTokenName(), data.token);
+            setSuccess("Login successful. Redirecting...");
+            window.setTimeout(() => {
+                window.location.href = "/dashboard";
+            }, 600);
+        } catch {
+            setError("Unable to connect to the server. Please try again.");
+        } finally {
+            setIsSubmitting(false);
+        }
+    };
+
     return (
         <main className="grid min-h-screen bg-slate-950 text-white lg:grid-cols-12">
             <section className="relative min-h-[480px] overflow-hidden lg:col-span-5 lg:min-h-screen">
@@ -64,7 +119,7 @@ const LoginPage = () => {
 
                     <form
                         className="space-y-5"
-                        onSubmit={(event) => event.preventDefault()}
+                        onSubmit={handleSubmit}
                     >
                         <label className="block">
                             <span className="mb-2 block text-sm font-medium text-slate-200">
@@ -73,9 +128,11 @@ const LoginPage = () => {
                             <input
                                 type="email"
                                 name="email"
+                                onChange={handleChangeEmail}
+                                value={email}
                                 autoComplete="email"
                                 placeholder="you@company.com"
-                                className="h-12 w-full rounded-lg border border-white/10 bg-white/[0.06] px-4 text-sm text-white outline-none transition placeholder:text-slate-500 focus:border-cyan-400 focus:ring-2 focus:ring-cyan-400/20"
+                                className="h-12 w-full rounded-lg border border-white/10 bg-white/[0.06] px-4 text-sm text-white outline-none transition placeholder:text-slate-500 focus:border-cyan-400 focus:ring-2 focus:ring-cyan-400/20 focus:scale-105"
                             />
                         </label>
 
@@ -86,17 +143,48 @@ const LoginPage = () => {
                             <input
                                 type="password"
                                 name="password"
+                                onChange={handleChangePassword}
+                                value={password}
                                 autoComplete="current-password"
                                 placeholder="Enter your password"
-                                className="h-12 w-full rounded-lg border border-white/10 bg-white/[0.06] px-4 text-sm text-white outline-none transition placeholder:text-slate-500 focus:border-cyan-400 focus:ring-2 focus:ring-cyan-400/20"
+                                className="h-12 w-full rounded-lg border border-white/10 bg-white/[0.06] px-4 text-sm text-white outline-none transition placeholder:text-slate-500 focus:border-cyan-400 focus:ring-2 focus:ring-cyan-400/20 focus-within:scale-105"
                             />
                         </label>
 
+                        {error && (
+                            <p
+                                className="rounded-lg border border-red-400/20 bg-red-400/10 px-4 py-3 text-sm text-red-200"
+                                role="alert"
+                            >
+                                {error}
+                            </p>
+                        )}
+
+                        {success && (
+                            <p
+                                className="rounded-lg border border-emerald-400/20 bg-emerald-400/10 px-4 py-3 text-sm text-emerald-200"
+                                role="status"
+                            >
+                                {success}
+                            </p>
+                        )}
+
                         <button
                             type="submit"
-                            className="h-12 w-full rounded-lg bg-cyan-300 px-4 text-sm font-semibold text-slate-950 transition hover:bg-cyan-200"
+                            disabled={isSubmitting}
+                            className="h-12 w-full rounded-lg bg-cyan-300 px-4 text-sm font-semibold text-slate-950 transition hover:bg-cyan-200 disabled:cursor-not-allowed disabled:opacity-70"
                         >
-                            Continue to dashboard
+                            {isSubmitting ? (
+                                <span className="inline-flex items-center gap-2">
+                                    <span
+                                        className="h-4 w-4 animate-spin rounded-full border-2 border-slate-950/30 border-t-slate-950"
+                                        aria-hidden="true"
+                                    />
+                                    Signing in...
+                                </span>
+                            ) : (
+                                "Continue to dashboard"
+                            )}
                         </button>
                     </form>
 
