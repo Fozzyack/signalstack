@@ -1,9 +1,11 @@
 import { getTokenName } from "./getEnvVars";
 
-const apiFetch = async (url: string, options: RequestInit) => {
-
-    const headers = new Headers;
-    headers.set("Authorization", `Bearer ${localStorage.getItem(getTokenName())}`);
+const apiFetch = async (url: string, options: RequestInit = {}) => {
+    const headers = new Headers();
+    headers.set(
+        "Authorization",
+        `Bearer ${localStorage.getItem(getTokenName())}`,
+    );
 
     const response = await fetch(url, {
         ...options,
@@ -13,6 +15,7 @@ const apiFetch = async (url: string, options: RequestInit) => {
     if (response.status === 401) {
         localStorage.removeItem(getTokenName());
         window.location.href = "/login";
+        throw new Error("Unauthorized");
     }
 
     return response;

@@ -1,22 +1,35 @@
 "use client";
 
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { ActivityFeed } from "@/components/dashboard/ActivityFeed";
 import { DashboardStats } from "@/components/dashboard/DashboardStats";
-import { experts, requests } from "@/components/dashboard/data";
+import { experts } from "@/components/dashboard/data";
 import { RequestQueue } from "@/components/dashboard/RequestQueue";
 import { TeamWorkload } from "@/components/dashboard/TeamWorkload";
+import { getBackendURL } from "@/lib/getEnvVars";
+import apiFetch from "@/lib/apiFetch";
+import { Request } from "@/types/requests";
 
 export default function DashboardPage() {
+    const [requests, setRequests] = useState<Request[]>([]);
     const [activeFilter, setActiveFilter] = useState("All requests");
     const [claimed, setClaimed] = useState<string[]>([]);
 
+    useEffect(() => {
+        const getRequests = async () => {
+            const response = await apiFetch(`${getBackendURL()}/requests`);
+            const data = await response.json();
+            setRequests(data);
+        };
+        getRequests();
+    }, []);
+
     const visibleRequests = requests.filter((request) => {
         if (activeFilter === "Unassigned")
-            return request.assignees.length === 0;
+            return (request.assignments ?? []).length === 0;
         if (activeFilter === "My tasks") return claimed.includes(request.id);
         if (activeFilter === "In progress")
-            return request.status === "In progress";
+            return request.status === "in_progress";
         return true;
     });
 

@@ -4,8 +4,8 @@ import {
     MagnifyingGlass,
 } from "@phosphor-icons/react";
 import { RequestCard } from "./RequestCard";
-import type { Request } from "./types";
 import { useState } from "react";
+import { Request } from "@/types/requests";
 
 type RequestQueueProps = {
     requests: Request[];
