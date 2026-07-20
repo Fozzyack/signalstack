@@ -1,11 +1,13 @@
 "use client";
 
 import { CaretLeft, CaretRight, MagnifyingGlass } from "@phosphor-icons/react";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import {
     MyTaskCard,
     type PersonalTask,
 } from "@/components/dashboard/MyTaskCard";
+import apiFetch from "@/lib/apiFetch";
+import { getBackendURL } from "@/lib/getEnvVars";
 
 const initialTasks: PersonalTask[] = [
     {
