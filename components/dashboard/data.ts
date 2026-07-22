@@ -76,4 +76,11 @@ export const experts: Expert[] = [
         count: 2,
         color: "bg-rose-200 text-slate-950",
     },
+    {
+        initials: "PS",
+        name: "Priya Shah",
+        role: "Identity · Security",
+        count: 2,
+        color: "bg-emerald-200 text-slate-950",
+    },
 ];

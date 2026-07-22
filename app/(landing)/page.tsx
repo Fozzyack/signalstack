@@ -1,8 +1,18 @@
+"use client";
+
+import CreateRequestModal from "@/components/CreateRequestModal";
 import Navbar from "@/components/Navbar";
+import { useState } from "react";
 
 export default function Home() {
+    const [isRequestModalOpen, setIsRequestModalOpen] = useState(false);
+
     return (
         <main className="min-h-screen bg-slate-950 text-white">
+            <CreateRequestModal
+                isOpen={isRequestModalOpen}
+                onClose={() => setIsRequestModalOpen(false)}
+            />
             <div className="relative isolate min-h-screen overflow-hidden bg-slate-950">
                 <video
                     className="absolute inset-0 z-0 h-full w-full object-cover"
@@ -35,12 +45,13 @@ export default function Home() {
                                     cloud, security, and software delivery.
                                 </p>
                             </div>
-                            <a
-                                href="mailto:hello@signalstack.com"
+                            <button
+                                type="button"
+                                onClick={() => setIsRequestModalOpen(true)}
                                 className="inline-flex shrink-0 items-center justify-center rounded-lg bg-white px-5 py-3 text-sm font-semibold uppercase text-slate-950 shadow-xl shadow-cyan-950/30 transition hover:bg-cyan-100 mt-8"
                             >
                                 Contact an expert
-                            </a>
+                            </button>
                         </div>
                     </section>
                 </div>
@@ -281,12 +292,13 @@ export default function Home() {
                         </p>
                     </div>
 
-                    <a
-                        href="mailto:hello@signalstack.com"
+                    <button
+                        type="button"
+                        onClick={() => setIsRequestModalOpen(true)}
                         className="inline-flex items-center justify-center rounded-lg bg-white px-5 py-3 text-sm uppercase text-slate-950 transition hover:bg-slate-200"
                     >
                         Contact an expert
-                    </a>
+                    </button>
                 </div>
             </section>
         </main>
