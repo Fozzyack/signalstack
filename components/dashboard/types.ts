@@ -16,3 +16,15 @@ export type Expert = {
     count: number;
     color: string;
 };
+
+export type RequestAssignment = {
+    id: string;
+    request_id: string;
+    user_id: string;
+    user_name: string;
+    role: string;
+    assigned_at: string;
+    unassigned_at?: string;
+    personal_deadline?: string;
+    completed_at?: string;
+};

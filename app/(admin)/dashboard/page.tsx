@@ -6,9 +6,10 @@ import { DashboardStats } from "@/components/dashboard/DashboardStats";
 import { experts } from "@/components/dashboard/data";
 import { RequestQueue } from "@/components/dashboard/RequestQueue";
 import { TeamWorkload } from "@/components/dashboard/TeamWorkload";
+import type { RequestAssignment } from "@/components/dashboard/types";
 import { getBackendURL } from "@/lib/getEnvVars";
 import apiFetch from "@/lib/apiFetch";
-import { Request } from "@/types/requests";
+import type { Request } from "@/types/requests";
 
 export default function DashboardPage() {
     const [requests, setRequests] = useState<Request[]>([]);
@@ -16,22 +17,27 @@ export default function DashboardPage() {
     const [user, setUser] = useState<string>("");
     const [activeFilter, setActiveFilter] = useState("All requests");
     const [claimed, setClaimed] = useState<string[]>([]);
+    const [assignments, setAssignments] = useState<RequestAssignment[]>([]);
 
     useEffect(() => {
-        const getRequests = async () => {
-            const response = await apiFetch(`${getBackendURL()}/requests`);
-            const data = await response.json();
-            setRequests(data);
+        const getDashboardData = async () => {
+            const [requestsResponse, userResponse, assignmentsResponse] =
+                await Promise.all([
+                    apiFetch(`${getBackendURL()}/requests`),
+                    apiFetch(`${getBackendURL()}/users/me`),
+                    apiFetch(`${getBackendURL()}/request-assignments`),
+                ]);
+            const [requestsData, userData, assignmentsData] = await Promise.all([
+                requestsResponse.json(),
+                userResponse.json(),
+                assignmentsResponse.json(),
+            ]);
+            setRequests(requestsData);
+            setUser(userData.name.split(" ")[0]);
+            setAssignments(assignmentsData);
             setLoading(false);
         };
-        const getUser = async () => {
-            const response = await apiFetch(`${getBackendURL()}/users/me`);
-            const data = await response.json();
-            setUser(data.name.split(" ")[0]);
-            setLoading(false);
-        };
-        getRequests();
-        getUser();
+        getDashboardData();
     }, []);
 
     const visibleRequests = requests.filter((request) => {
@@ -174,7 +180,7 @@ export default function DashboardPage() {
                         onClaim={claimRequest}
                     />
                     <aside className="space-y-8">
-                        <TeamWorkload experts={experts} />
+                        <TeamWorkload experts={experts} assignments={assignments} />
                         <ActivityFeed />
                     </aside>
                 </div>
