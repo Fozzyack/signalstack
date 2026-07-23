@@ -157,10 +157,10 @@ const SettingsPage = () => {
                             <label className="block text-sm font-medium text-slate-300">
                                 Current password
                                 <input
-                                type="password"
-                                name="currentPassword"
-                                value={currentPassword}
-                                required
+                                    type="password"
+                                    name="currentPassword"
+                                    value={currentPassword}
+                                    required
                                     onChange={(event) => {
                                         setCurrentPassword(event.target.value);
                                         setSaved(false);
