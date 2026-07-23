@@ -62,7 +62,7 @@ export default function DashboardPage() {
                 aria-live="polite"
                 aria-busy="true"
             >
-                <div className="mx-auto max-w-[1480px] px-5 py-8 sm:px-8 lg:px-10 lg:py-10">
+                <div className="mx-auto max-w-370 px-5 py-8 sm:px-8 lg:px-10 lg:py-10">
                     <div className="relative isolate overflow-hidden rounded-2xl border border-white/10 bg-slate-900/70 px-6 py-8 sm:px-8">
                         <div className="absolute -right-16 -top-24 -z-10 h-72 w-72 rounded-full bg-cyan-400/10 blur-3xl" />
                         <div className="absolute -bottom-32 left-1/3 -z-10 h-64 w-64 rounded-full bg-blue-500/10 blur-3xl" />

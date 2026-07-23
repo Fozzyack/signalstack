@@ -15,6 +15,11 @@ export function DashboardSidebar() {
     const isDashboard = pathname === "/dashboard";
     const isMyTasks = pathname.startsWith("/dashboard/my-tasks");
 
+    const logout = () => {
+        localStorage.removeItem("token");
+        window.location.href = "/login";
+    };
+
     return (
         <aside className="hidden w-64 shrink-0 border-r border-white/10 bg-slate-950 px-5 py-6 lg:flex lg:flex-col">
             <div className="flex items-center gap-3 px-2">
@@ -61,22 +66,19 @@ export function DashboardSidebar() {
                         />{" "}
                         My tasks
                     </a>
-                    <a
-                        href="#activity"
-                        className="flex items-center gap-3 rounded-lg px-3 py-2.5 text-sm text-slate-400 transition hover:bg-white/[0.05] hover:text-white"
-                    >
-                        <Clock size={18} /> Activity log
-                    </a>
                 </nav>
             </div>
             <div className="mt-auto border-t border-white/10 pt-5">
                 <a
-                    href="#settings"
+                    href="/dashboard/settings"
                     className="flex items-center gap-3 px-3 py-2.5 text-sm text-slate-400 hover:text-white"
                 >
                     <GearSix size={18} /> Settings
                 </a>
-                <button className="mt-5 flex w-full items-center gap-3 rounded-xl border border-white/10 bg-white/[0.04] p-3 text-sm text-slate-400 transition hover:border-white/20 hover:text-white">
+                <button
+                    className="mt-5 flex w-full items-center gap-3 rounded-xl border border-white/10 bg-white/[0.04] p-3 text-sm text-slate-400 transition hover:border-white/20 hover:text-white"
+                    onClick={logout}
+                >
                     <SignOut size={18} />
                     <span>Log out</span>
                 </button>

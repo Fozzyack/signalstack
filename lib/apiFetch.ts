@@ -6,6 +6,7 @@ const apiFetch = async (url: string, options: RequestInit = {}) => {
         "Authorization",
         `Bearer ${localStorage.getItem(getTokenName())}`,
     );
+    if (options.body) headers.set("Content-Type", "application/json");
 
     const response = await fetch(url, {
         ...options,
