@@ -1,18 +1,39 @@
 "use client";
 
-import CreateRequestModal from "@/components/CreateRequestModal";
-import Navbar from "@/components/Navbar";
-import { useState } from "react";
+import { experts } from "@/components/dashboard/data";
+import { useLandingLayout } from "./layout";
+
+const serviceAreas = [
+    "Infrastructure",
+    "Cloud",
+    "Security",
+    "Technical support",
+    "Software delivery",
+];
+
+const processSteps = [
+    {
+        number: "01",
+        title: "Tell us what needs attention",
+        detail: "Share the role, skills, timeline, and project context so we can understand the gap you need to fill.",
+    },
+    {
+        number: "02",
+        title: "Meet the right specialists",
+        detail: "We shortlist available IT professionals across support, infrastructure, cloud, security, and software delivery.",
+    },
+    {
+        number: "03",
+        title: "Start with confidence",
+        detail: "Bring the contractor onboard quickly, with clear expectations and practical support from first conversation to start date.",
+    },
+];
 
 export default function Home() {
-    const [isRequestModalOpen, setIsRequestModalOpen] = useState(false);
+    const { openRequestModal } = useLandingLayout();
 
     return (
         <main className="min-h-screen bg-slate-950 text-white">
-            <CreateRequestModal
-                isOpen={isRequestModalOpen}
-                onClose={() => setIsRequestModalOpen(false)}
-            />
             <div className="relative isolate min-h-screen overflow-hidden bg-slate-950">
                 <video
                     className="absolute inset-0 z-0 h-full w-full object-cover"
@@ -29,7 +50,6 @@ export default function Home() {
                 <div className="absolute inset-x-0 bottom-0 z-10 h-48 bg-gradient-to-t from-slate-950 to-transparent" />
 
                 <div className="relative z-20">
-                    <Navbar />
                     <section className="mx-auto flex min-h-[calc(100vh-88px)] w-full max-w-7xl items-end px-6 py-16 sm:px-8 lg:px-12 lg:py-24">
                         <div className="max-w-3xl">
                             <p className="mb-6 text-sm font-semibold uppercase tracking-[0.3em] text-cyan-300">
@@ -47,11 +67,24 @@ export default function Home() {
                             </div>
                             <button
                                 type="button"
-                                onClick={() => setIsRequestModalOpen(true)}
+                                onClick={openRequestModal}
                                 className="inline-flex shrink-0 items-center justify-center rounded-lg bg-white px-5 py-3 text-sm font-semibold uppercase text-slate-950 shadow-xl shadow-cyan-950/30 transition hover:bg-cyan-100 mt-8"
                             >
                                 Contact an expert
                             </button>
+                            <div className="mt-10 flex flex-wrap gap-2 border-t border-white/15 pt-5">
+                                <span className="mr-2 py-2 text-xs font-semibold uppercase tracking-[0.2em] text-slate-400">
+                                    Specialist coverage
+                                </span>
+                                {serviceAreas.map((area) => (
+                                    <span
+                                        key={area}
+                                        className="rounded-full border border-white/15 bg-white/5 px-3 py-2 text-xs text-slate-200"
+                                    >
+                                        {area}
+                                    </span>
+                                ))}
+                            </div>
                         </div>
                     </section>
                 </div>
@@ -61,64 +94,38 @@ export default function Home() {
                 id="how-it-works"
                 className="pointer-events-auto border-t border-slate-200 bg-white px-6 py-20 text-slate-950 sm:px-8 lg:px-12"
             >
-                <div className="mx-auto w-full max-w-7xl">
-                    <p className="text-sm font-semibold uppercase tracking-[0.3em] text-slate-500">
-                        How SignalStack works
-                    </p>
-                    <p className="mt-4 max-w-2xl text-lg leading-8 text-slate-600">
-                        A straightforward process for finding proven IT
-                        professionals, confirming fit, and getting them
-                        productive quickly.
-                    </p>
-                    <div className="mt-6 grid gap-10 lg:grid-cols-[0.9fr_1.1fr] lg:items-start">
-                        <h2 className="text-4xl font-semibold tracking-tight text-balance sm:text-5xl">
-                            Get the right IT contractor into your team without
-                            slowing the project down.
+                <div className="mx-auto grid w-full max-w-7xl gap-12 lg:grid-cols-[0.75fr_1.25fr] lg:gap-20">
+                    <div>
+                        <p className="text-sm font-semibold uppercase tracking-[0.3em] text-slate-500">
+                            How SignalStack works
+                        </p>
+                        <h2 className="mt-5 max-w-md text-4xl font-semibold tracking-tight text-balance sm:text-5xl">
+                            From urgent brief to useful expertise.
                         </h2>
+                        <p className="mt-5 max-w-sm text-lg leading-8 text-slate-600">
+                            A straightforward path for finding proven IT
+                            professionals, confirming fit, and getting them
+                            productive quickly.
+                        </p>
+                    </div>
 
-                        <div className="grid gap-5 sm:grid-cols-3 lg:grid-cols-1">
-                            <div className="rounded-2xl border border-slate-200 p-6">
-                                <p className="text-sm font-semibold uppercase tracking-[0.2em] text-slate-400">
-                                    01
+                    <div className="border-t border-slate-300">
+                        {processSteps.map((step) => (
+                            <article
+                                key={step.number}
+                                className="grid gap-5 border-b border-slate-300 py-7 sm:grid-cols-[5rem_1fr_0.8fr] sm:items-start sm:gap-7 sm:py-9"
+                            >
+                                <p className="text-4xl font-semibold tracking-tight text-cyan-600 sm:text-5xl">
+                                    {step.number}
                                 </p>
-                                <h3 className="mt-4 text-xl font-semibold">
-                                    Tell us what you need
+                                <h3 className="text-2xl font-semibold tracking-tight">
+                                    {step.title}
                                 </h3>
-                                <p className="mt-3 leading-7 text-slate-600">
-                                    Share the role, skills, timeline, and
-                                    project context so we can understand the gap
-                                    you need to fill.
+                                <p className="text-sm leading-7 text-slate-600">
+                                    {step.detail}
                                 </p>
-                            </div>
-
-                            <div className="rounded-2xl border border-slate-200 p-6">
-                                <p className="text-sm font-semibold uppercase tracking-[0.2em] text-slate-400">
-                                    02
-                                </p>
-                                <h3 className="mt-4 text-xl font-semibold">
-                                    We shortlist suitable experts
-                                </h3>
-                                <p className="mt-3 leading-7 text-slate-600">
-                                    We match you with available IT professionals
-                                    across support, infrastructure, cloud,
-                                    security, and software delivery.
-                                </p>
-                            </div>
-
-                            <div className="rounded-2xl border border-slate-200 p-6">
-                                <p className="text-sm font-semibold uppercase tracking-[0.2em] text-slate-400">
-                                    03
-                                </p>
-                                <h3 className="mt-4 text-xl font-semibold">
-                                    Start with confidence
-                                </h3>
-                                <p className="mt-3 leading-7 text-slate-600">
-                                    Bring the contractor onboard quickly, with
-                                    clear expectations and practical support
-                                    from first conversation to start date.
-                                </p>
-                            </div>
-                        </div>
+                            </article>
+                        ))}
                     </div>
                 </div>
             </section>
@@ -154,50 +161,45 @@ export default function Home() {
                         </div>
                     </div>
 
-                    <div className="mt-16">
+                    <div className="mt-20 border-t border-white/10 pt-16">
                         <p className="text-sm font-semibold uppercase tracking-[0.3em] text-cyan-300">
-                            Meet the team
+                            Meet the expert network
                         </p>
-                        <div className="mt-8 grid gap-5 sm:grid-cols-2 lg:grid-cols-4">
-                            <div className="rounded-2xl border border-white/10 bg-white/[0.04] p-5">
-                                <div className="mb-5 aspect-square rounded-xl border border-dashed border-white/15 bg-slate-900" />
-                                <h3 className="font-semibold text-white">
-                                    Team member
-                                </h3>
-                                <p className="mt-1 text-sm uppercase tracking-[0.18em] text-slate-400">
-                                    Contractor matching
-                                </p>
-                            </div>
-
-                            <div className="rounded-2xl border border-white/10 bg-white/[0.04] p-5">
-                                <div className="mb-5 aspect-square rounded-xl border border-dashed border-white/15 bg-slate-900" />
-                                <h3 className="font-semibold text-white">
-                                    Team member
-                                </h3>
-                                <p className="mt-1 text-sm uppercase tracking-[0.18em] text-slate-400">
-                                    Technical screening
-                                </p>
-                            </div>
-
-                            <div className="rounded-2xl border border-white/10 bg-white/[0.04] p-5">
-                                <div className="mb-5 aspect-square rounded-xl border border-dashed border-white/15 bg-slate-900" />
-                                <h3 className="font-semibold text-white">
-                                    Team member
-                                </h3>
-                                <p className="mt-1 text-sm uppercase tracking-[0.18em] text-slate-400">
-                                    Client support
-                                </p>
-                            </div>
-
-                            <div className="rounded-2xl border border-white/10 bg-white/[0.04] p-5">
-                                <div className="mb-5 aspect-square rounded-xl border border-dashed border-white/15 bg-slate-900" />
-                                <h3 className="font-semibold text-white">
-                                    Team member
-                                </h3>
-                                <p className="mt-1 text-sm uppercase tracking-[0.18em] text-slate-400">
-                                    Delivery coordination
-                                </p>
-                            </div>
+                        <div className="mt-5 flex flex-col gap-5 sm:flex-row sm:items-end sm:justify-between">
+                            <h3 className="max-w-2xl text-3xl font-semibold tracking-tight text-balance sm:text-4xl">
+                                Technical people for the problems that need
+                                more than a quick fix.
+                            </h3>
+                            <p className="max-w-sm text-sm leading-6 text-slate-400">
+                                Our specialists bring focused experience across
+                                the systems, platforms, and delivery work that
+                                keeps teams moving.
+                            </p>
+                        </div>
+                        <div className="mt-8 grid gap-5 sm:grid-cols-2 lg:grid-cols-5">
+                            {experts.map((expert, index) => (
+                                <article
+                                    key={expert.initials}
+                                    className="group rounded-2xl border border-white/10 bg-white/[0.04] p-5 transition hover:-translate-y-1 hover:border-cyan-300/40 hover:bg-white/[0.07]"
+                                >
+                                    <div className="flex items-start justify-between">
+                                        <div
+                                            className={`flex h-14 w-14 items-center justify-center rounded-full text-sm font-bold ${expert.color}`}
+                                        >
+                                            {expert.initials}
+                                        </div>
+                                        <span className="text-xs font-semibold tracking-[0.2em] text-slate-500">
+                                            0{index + 1}
+                                        </span>
+                                    </div>
+                                    <h3 className="mt-8 font-semibold text-white">
+                                        {expert.name}
+                                    </h3>
+                                    <p className="mt-2 text-xs uppercase leading-5 tracking-[0.16em] text-slate-400">
+                                        {expert.role}
+                                    </p>
+                                </article>
+                            ))}
                         </div>
                     </div>
                 </div>
@@ -275,32 +277,41 @@ export default function Home() {
 
             <section
                 id="contact"
-                className="pointer-events-auto border-t border-white/10 bg-slate-950 px-6 py-20 text-white sm:px-8 lg:px-12"
+                className="pointer-events-auto relative isolate overflow-hidden border-t border-slate-200 bg-white px-6 py-24 text-slate-950 sm:px-8 lg:px-12 lg:py-32"
             >
-                <div className="mx-auto grid w-full max-w-7xl gap-8 rounded-[2rem] border border-white/10 bg-white/[0.04] p-8 shadow-2xl shadow-cyan-950/20 sm:p-10 lg:grid-cols-[1fr_auto] lg:items-center">
-                    <div>
-                        <p className="text-sm font-semibold uppercase tracking-[0.3em] text-cyan-300">
+                <div className="absolute -right-28 -top-32 -z-10 h-96 w-96 rounded-full border-[48px] border-cyan-300/20" />
+                <div className="absolute -bottom-52 -left-24 -z-10 h-96 w-96 rounded-full border-[48px] border-slate-950/[0.04]" />
+                <div className="mx-auto w-full max-w-7xl">
+                    <div className="flex flex-col gap-5 sm:flex-row sm:items-start sm:justify-between">
+                        <p className="text-sm font-semibold uppercase tracking-[0.3em] text-cyan-700">
                             Contact us
                         </p>
-                        <h2 className="mt-5 text-4xl font-semibold tracking-tight text-balance sm:text-5xl">
-                            Need an IT professional for your next project?
-                        </h2>
-                        <p className="mt-5 max-w-2xl text-lg leading-8 text-slate-300">
-                            Tell us what skills you need, when you need support,
-                            and what you are trying to deliver. We will help you
-                            find the right contractor.
+                        <p className="text-sm font-semibold uppercase tracking-[0.2em] text-slate-400">
+                            SignalStack / 05
                         </p>
                     </div>
 
-                    <button
-                        type="button"
-                        onClick={() => setIsRequestModalOpen(true)}
-                        className="inline-flex items-center justify-center rounded-lg bg-white px-5 py-3 text-sm uppercase text-slate-950 transition hover:bg-slate-200"
-                    >
-                        Contact an expert
-                    </button>
+                    <h2 className="mt-12 max-w-5xl text-5xl font-semibold leading-[0.95] tracking-tight text-balance sm:text-7xl lg:text-8xl">
+                        Bring the right signal to your next deadline.
+                    </h2>
+
+                    <div className="mt-16 grid gap-8 border-t border-slate-200 pt-7 lg:grid-cols-[1fr_auto] lg:items-end">
+                        <p className="max-w-xl text-lg leading-8 text-slate-600">
+                            Tell us what is blocking your team, what expertise
+                            you need, and when the work needs to move. We will
+                            help you find the right technical specialist.
+                        </p>
+                        <button
+                            type="button"
+                            onClick={openRequestModal}
+                            className="inline-flex items-center justify-center rounded-lg bg-slate-950 px-6 py-3.5 text-sm font-semibold uppercase tracking-wide text-white transition hover:bg-slate-800"
+                        >
+                            Start a request
+                        </button>
+                    </div>
                 </div>
             </section>
+
         </main>
     );
 }
