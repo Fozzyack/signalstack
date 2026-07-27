@@ -95,9 +95,9 @@ const LoginPage = () => {
                 </video>
 
                 <div className="absolute inset-0 z-10 bg-slate-950/35" />
-                <div className="absolute inset-0 z-10 bg-gradient-to-b from-slate-950/70 via-transparent to-slate-950" />
+                <div className="absolute inset-0 z-10 bg-linear-to-b from-slate-950/70 via-transparent to-slate-950" />
 
-                <div className="relative z-20 flex min-h-[480px] flex-col justify-between p-6 sm:p-10 lg:min-h-screen lg:p-12">
+                <div className="relative z-20 flex min-h-120 flex-col justify-between p-6 sm:p-10 lg:min-h-screen lg:p-12">
                     <div className="flex items-center justify-between text-xs font-semibold uppercase tracking-[0.24em] text-white/70">
                         <span>SignalStack</span>
                     </div>
