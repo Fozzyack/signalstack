@@ -19,7 +19,7 @@ export function RequestCard({ request, isClaimed, onClaim }: RequestCardProps) {
                         </span>
                     </div>
                     <h3 className="mt-2 truncate text-base font-medium text-slate-100">{request.title}</h3>
-                    <p className="mt-1 truncate text-sm text-slate-500">{request.description}</p>
+                    <p className="mt-1 text-sm leading-5 text-slate-400">{request.description}</p>
                 </div>
                 <div className="text-sm">
                     <p className="text-[10px] font-semibold uppercase tracking-wider text-slate-600">Client</p>
