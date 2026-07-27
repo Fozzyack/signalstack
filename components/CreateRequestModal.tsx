@@ -94,6 +94,7 @@ const CreateRequestModal = ({
         setError("");
         setSuccess("");
         setIsSubmitting(true);
+        let requestSucceeded = false;
 
         try {
             const res = await fetch(`${getBackendURL()}/requests`, {
@@ -111,19 +112,26 @@ const CreateRequestModal = ({
             await res.json();
             await onSubmit?.(form);
             setForm(initialForm);
-            setSuccess(
-                "Your request has been submitted successfully. We will be in touch soon.",
-            );
+            requestSucceeded = true;
         } catch (requestError) {
             setError(
                 requestError instanceof Error
                     ? requestError.message
                     : "Unable to submit your request. Please try again.",
             );
-        }finally {
+        } finally {
             setIsSubmitting(false);
             setCooldownUntil(Date.now() + REQUEST_COOLDOWN_MS);
-        }     };
+            await new Promise<void>((resolve) =>
+                window.setTimeout(resolve, REQUEST_COOLDOWN_MS),
+            );
+            if (requestSucceeded) {
+                setSuccess(
+                    "Your request has been submitted successfully. We will be in touch soon.",
+                );
+            }
+        }
+    };
 
     return createPortal(
         <div
