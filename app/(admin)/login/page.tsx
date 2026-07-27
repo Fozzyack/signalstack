@@ -2,7 +2,8 @@
 
 import { getBackendURL, getTokenName } from "@/lib/getEnvVars";
 import Link from "next/link";
-import { useState } from "react";
+import { useRouter } from "next/navigation";
+import { useEffect, useState } from "react";
 
 const LoginPage = () => {
     const [email, setEmail] = useState("");
@@ -10,6 +11,8 @@ const LoginPage = () => {
     const [error, setError] = useState("");
     const [success, setSuccess] = useState("");
     const [isSubmitting, setIsSubmitting] = useState(false);
+    const [loading, setLoading] = useState(true);
+    const router = useRouter();
 
     const handleChangeEmail = (event: React.ChangeEvent<HTMLInputElement>) => {
         setEmail(event.target.value);
@@ -57,6 +60,25 @@ const LoginPage = () => {
             setIsSubmitting(false);
         }
     };
+
+    useEffect(() => {
+        const checkAuth = async () => {
+            const res = await fetch(`${getBackendURL()}/auth/check`, {
+                headers: {
+                    "Authorization": `Bearer ${localStorage.getItem(getTokenName())}`,
+                }
+            });
+            if (res.ok) {
+                router.push("/dashboard");
+            }
+            setLoading(false);
+        }
+        checkAuth();
+    }, [])
+
+    if (loading) {
+        return <div className="flex h-screen items-center justify-center text-white bg-slate-950">Loading...</div>;
+    }
 
     return (
         <main className="grid min-h-screen bg-slate-950 text-white lg:grid-cols-12">
