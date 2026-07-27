@@ -23,11 +23,28 @@ export function RequestQueue({
     onClaim,
 }: RequestQueueProps) {
     const [currentPage, setCurrentPage] = useState(1);
+    const [search, setSearch] = useState("");
     const filters = ["All requests", "Unassigned", "My tasks", "In progress"];
     const pageSize = 3;
-    const pageCount = Math.max(1, Math.ceil(requests.length / pageSize));
+    const searchedRequests = requests.filter((request) =>
+        [
+            request.reference,
+            request.title,
+            request.client_name,
+            request.client_email,
+            request.description,
+            ...(request.assignments ?? []).flatMap((assignment) => [
+                assignment.user_id,
+                assignment.user_name ?? "",
+            ]),
+        ]
+            .join(" ")
+            .toLowerCase()
+            .includes(search.toLowerCase()),
+    );
+    const pageCount = Math.max(1, Math.ceil(searchedRequests.length / pageSize));
     const page = Math.min(currentPage, pageCount);
-    const visibleRequests = requests.slice(
+    const visibleRequests = searchedRequests.slice(
         (page - 1) * pageSize,
         page * pageSize,
     );
@@ -49,9 +66,15 @@ export function RequestQueue({
                 <div className="flex gap-2">
                     <div className="flex items-center gap-2 rounded-lg border border-white/10 bg-white/[0.04] px-3 py-2 text-sm text-slate-500">
                         <MagnifyingGlass size={16} />
-                        <span className="hidden sm:inline">
-                            Search requests
-                        </span>
+                        <input
+                            value={search}
+                            onChange={(event) => {
+                                setSearch(event.target.value);
+                                setCurrentPage(1);
+                            }}
+                            placeholder="Search requests"
+                            className="w-36 bg-transparent text-sm text-white outline-none placeholder:text-slate-600 sm:w-48"
+                        />
                     </div>
                 </div>
             </div>
@@ -66,7 +89,7 @@ export function RequestQueue({
                             {filter}
                             {filter === "Unassigned" && (
                                 <span className="ml-2 rounded-full bg-amber-200/15 px-1.5 py-0.5 text-[10px] text-amber-200">
-                                    4
+                                    {requests.filter((request) => (request.assignments ?? []).length === 0).length}
                                 </span>
                             )}
                         </button>
@@ -82,7 +105,7 @@ export function RequestQueue({
                         onClaim={onClaim}
                     />
                 ))}
-                {requests.length === 0 && (
+                {searchedRequests.length === 0 && (
                     <div className="rounded-xl border border-dashed border-white/10 py-14 text-center text-sm text-slate-500">
                         No requests match this view.
                     </div>

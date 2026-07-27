@@ -21,4 +21,5 @@ export type RequestAssignment = {
     unassigned_at?: string;
     personal_deadline?: string;
     completed_at?: string;
+    user_name?: string;
 };

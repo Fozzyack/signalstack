@@ -76,7 +76,7 @@ export default function MyTasksPage() {
 
     const filteredTasks = tasks.filter((task) =>
         (activeFilter === "All tasks" || task.status === activeFilter) &&
-        [task.id, task.title, task.client, task.detail]
+        [task.id, task.title, task.client, task.email, task.detail]
             .join(" ")
             .toLowerCase()
             .includes(search.toLowerCase()),

@@ -14,30 +14,78 @@ import type { Request } from "@/types/requests";
 export default function DashboardPage() {
     const [requests, setRequests] = useState<Request[]>([]);
     const [loading, setLoading] = useState(true);
+    const [error, setError] = useState("");
     const [user, setUser] = useState<string>("");
     const [activeFilter, setActiveFilter] = useState("All requests");
     const [claimed, setClaimed] = useState<string[]>([]);
+    const [claiming, setClaiming] = useState<string[]>([]);
     const [assignments, setAssignments] = useState<RequestAssignment[]>([]);
 
-    useEffect(() => {
-        const getDashboardData = async () => {
+    const getDashboardData = async (showLoading = false) => {
+        if (showLoading) {
+            setLoading(true);
+        }
+        setError("");
+        try {
             const [requestsResponse, userResponse, assignmentsResponse] =
                 await Promise.all([
                     apiFetch(`${getBackendURL()}/requests`),
                     apiFetch(`${getBackendURL()}/users/me`),
                     apiFetch(`${getBackendURL()}/request-assignments`),
                 ]);
+            if (!requestsResponse.ok || !userResponse.ok || !assignmentsResponse.ok) {
+                throw new Error("Unable to load the dashboard data.");
+            }
             const [requestsData, userData, assignmentsData] = await Promise.all([
                 requestsResponse.json(),
                 userResponse.json(),
                 assignmentsResponse.json(),
             ]);
-            setRequests(requestsData);
+            const assignmentNames = new Map<string, string>(
+                assignmentsData.map((assignment: RequestAssignment) => [
+                    assignment.user_id,
+                    assignment.user_name,
+                ]),
+            );
+            setRequests(
+                requestsData.map((request: Request) => ({
+                    ...request,
+                    assignments: (request.assignments ?? []).map((assignment) => ({
+                        ...assignment,
+                        user_name:
+                            assignment.user_name ??
+                            assignmentNames.get(assignment.user_id),
+                    })),
+                })),
+            );
             setUser(userData.name.split(" ")[0]);
             setAssignments(assignmentsData);
+            setClaimed(
+                assignmentsData
+                    .filter(
+                        (assignment: RequestAssignment) =>
+                            assignment.user_id === userData.id &&
+                            !assignment.unassigned_at &&
+                            !assignment.completed_at,
+                    )
+                    .map((assignment: RequestAssignment) => assignment.request_id),
+            );
+        } catch (requestError) {
+            setError(
+                requestError instanceof Error
+                    ? requestError.message
+                    : "Unable to load the dashboard data.",
+            );
+        } finally {
             setLoading(false);
-        };
-        getDashboardData();
+        }
+    };
+
+    useEffect(() => {
+        const timer = window.setTimeout(() => {
+            getDashboardData(true);
+        }, 0);
+        return () => window.clearTimeout(timer);
     }, []);
 
     const visibleRequests = requests.filter((request) => {
@@ -49,11 +97,30 @@ export default function DashboardPage() {
         return true;
     });
 
-    const claimRequest = (id: string) => {
-        setClaimed((current) =>
-            current.includes(id) ? current : [...current, id],
-        );
+    const claimRequest = async (id: string) => {
+        if (claiming.includes(id)) return;
+        setClaiming((current) => [...current, id]);
+        try {
+            const response = await apiFetch(`${getBackendURL()}/request-assignments`, {
+                method: "POST",
+                body: JSON.stringify({ request_id: id, role: "lead" }),
+            });
+            if (!response.ok) {
+                throw new Error("Unable to assign this request to you.");
+            }
+            await getDashboardData();
+        } catch (requestError) {
+            setError(
+                requestError instanceof Error
+                    ? requestError.message
+                : "Unable to assign this request to you.",
+            );
+        } finally {
+            setClaiming((current) => current.filter((requestId) => requestId !== id));
+        }
     };
+
+    const claimedOrClaiming = [...new Set([...claimed, ...claiming])];
 
     if (loading)
         return (
@@ -133,49 +200,43 @@ export default function DashboardPage() {
         );
 
     return (
-        <main className="min-h-full bg-slate-950 text-white">
+        <main className="min-h-full bg-slate-950 text-white" aria-live="polite">
             <div className="mx-auto max-w-[1480px] px-5 py-8 sm:px-8 lg:px-10 lg:py-10">
-                <div className="relative isolate overflow-hidden rounded-2xl border border-white/10 px-6 py-8 sm:px-8">
-                    <video
-                        className="absolute inset-0 -z-20 h-full w-full object-cover opacity-45"
-                        autoPlay
-                        loop
-                        muted
-                        playsInline
-                        aria-hidden="true"
-                    >
-                        <source
-                            src="/landingvid-optimized.mp4"
-                            type="video/mp4"
-                        />
-                    </video>
-                    <div className="absolute inset-0 -z-10 bg-slate-950/65" />
-                    <div className="absolute inset-0 -z-10 bg-gradient-to-r from-slate-950 via-slate-950/75 to-slate-950/35" />
-                    <div className="relative flex flex-col justify-between gap-5 sm:flex-row sm:items-end">
+                <div className="flex flex-col justify-between gap-5 border-b border-white/10 pb-8 sm:flex-row sm:items-end">
+                    <div>
+                        <p className="text-xs font-semibold uppercase tracking-[0.28em] text-cyan-300">
+                            Operations overview
+                        </p>
                         <div>
-                            <p className="text-sm font-semibold uppercase tracking-[0.3em] text-cyan-300">
-                                {new Date().toLocaleDateString("en-US", {
-                                    weekday: "long",
-                                    year: "numeric",
-                                    month: "long",
-                                    day: "numeric",
-                                })}
-                            </p>
                             <h1 className="mt-3 text-3xl font-semibold tracking-tight sm:text-4xl">
                                 Good morning, {user}.
                             </h1>
-                            <p className="mt-2 text-sm text-slate-300">
-                                Here is what needs your team&apos;s attention.
+                            <p className="mt-2 text-sm text-slate-400">
+                                Prioritize the requests that need an owner or a next step.
                             </p>
                         </div>
                     </div>
+                    <a
+                        href="#queue"
+                        className="rounded-lg bg-cyan-300 px-4 py-2.5 text-center text-sm font-semibold text-slate-950 transition hover:bg-cyan-200"
+                    >
+                        Review request queue
+                    </a>
                 </div>
+                {error && (
+                    <div className="mt-6 flex items-center justify-between gap-4 rounded-xl border border-rose-300/20 bg-rose-300/[0.05] px-4 py-3 text-sm text-rose-200">
+                        <span>{error}</span>
+                        <button onClick={() => getDashboardData(true)} className="font-semibold text-white hover:text-rose-100">
+                            Retry
+                        </button>
+                    </div>
+                )}
                 <DashboardStats requests={requests} />
                 <div className="mt-10 grid gap-8 xl:grid-cols-[minmax(0,1fr)_330px]">
                     <RequestQueue
                         requests={visibleRequests}
                         activeFilter={activeFilter}
-                        claimed={claimed}
+                        claimed={claimedOrClaiming}
                         onFilterChange={setActiveFilter}
                         onClaim={claimRequest}
                     />
