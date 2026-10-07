@@ -1,91 +1,110 @@
 "use client";
 
 import Image from "next/image";
+import Link from "next/link";
+import { ArrowUpRight } from "@phosphor-icons/react";
 
 const serviceAreas = [
     "Infrastructure",
     "Cloud",
     "Security",
     "Technical support",
+    "Software delivery",
 ];
+const focus =
+    "focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-cyan-300";
 
-type FooterProps = {
-    onRequestClick: () => void;
-};
+type FooterProps = { onRequestClick: () => void };
 
 const Footer = ({ onRequestClick }: FooterProps) => {
     return (
-        <footer className="border-t border-white/10 bg-slate-950 px-6 py-16 text-white sm:px-8 lg:px-12 lg:py-20">
-            <div className="mx-auto w-full max-w-7xl">
-                <div className="grid gap-12 lg:grid-cols-[1.4fr_1fr_1fr_1fr] lg:gap-8">
+        <footer className="border-t border-white/10 bg-slate-950 px-5 py-14 text-white sm:px-8 lg:px-12">
+            <div className="mx-auto max-w-7xl">
+                <div className="grid gap-10 sm:grid-cols-2 lg:grid-cols-[1.5fr_1fr_1fr_1fr]">
                     <div>
-                        <a
-                            href="#"
-                            className="inline-flex items-center gap-3 text-lg font-semibold tracking-tight"
+                        <Link
+                            href="/"
+                            className={`inline-flex items-center gap-2.5 rounded-sm text-lg font-semibold tracking-tight ${focus}`}
                         >
                             <Image
                                 src="/logo.png"
-                                alt="SignalStack logo"
-                                width={40}
-                                height={40}
+                                alt=""
+                                width={36}
+                                height={36}
                             />
-                            SignalStack
-                        </a>
-                        <p className="mt-6 max-w-xs text-sm leading-6 text-slate-400">
-                            Experienced IT specialists for the work that cannot
-                            wait.
+                            <span>
+                                SignalStack
+                                <span
+                                    className="text-cyan-300"
+                                    aria-hidden="true"
+                                >
+                                    .
+                                </span>
+                            </span>
+                        </Link>
+                        <p className="mt-5 max-w-60 text-sm leading-7 text-slate-400">
+                            Experienced IT specialists.
+                            <br />
+                            Less noise. More progress.
                         </p>
                     </div>
-
                     <div>
-                        <p className="text-xs font-semibold uppercase tracking-[0.25em] text-slate-500">
+                        <h2 className="font-mono text-xs uppercase tracking-[0.18em] text-slate-400">
                             Explore
-                        </p>
-                        <nav className="mt-5 flex flex-col items-start gap-3 text-sm text-slate-300">
-                            <a className="transition hover:text-cyan-300" href="#how-it-works">
-                                How it works
-                            </a>
-                            <a className="transition hover:text-cyan-300" href="#about-us">
-                                Expert network
-                            </a>
-                            <a className="transition hover:text-cyan-300" href="#testimonials">
-                                Testimonials
-                            </a>
+                        </h2>
+                        <nav
+                            aria-label="Footer navigation"
+                            className="mt-5 flex flex-col items-start gap-3 text-sm text-slate-300"
+                        >
+                            {[
+                                ["How it works", "/#how-it-works"],
+                                ["About us", "/#about-us"],
+                                ["Testimonials", "/#testimonials"],
+                                ["Contact", "/#contact"],
+                            ].map(([label, href]) => (
+                                <Link
+                                    key={href}
+                                    href={href}
+                                    className={`rounded-sm transition hover:text-cyan-300 ${focus}`}
+                                >
+                                    {label}
+                                </Link>
+                            ))}
                         </nav>
                     </div>
-
                     <div>
-                        <p className="text-xs font-semibold uppercase tracking-[0.25em] text-slate-500">
-                            Coverage
-                        </p>
-                        <div className="mt-5 flex flex-col gap-3 text-sm text-slate-300">
+                        <h2 className="font-mono text-xs uppercase tracking-[0.18em] text-slate-400">
+                            Expertise
+                        </h2>
+                        <ul className="mt-5 space-y-3 text-sm text-slate-300">
                             {serviceAreas.map((area) => (
-                                <span key={area}>{area}</span>
+                                <li key={area}>{area}</li>
                             ))}
-                        </div>
+                        </ul>
                     </div>
-
                     <div>
-                        <p className="text-xs font-semibold uppercase tracking-[0.25em] text-slate-500">
-                            Start here
-                        </p>
-                        <p className="mt-5 max-w-xs text-sm leading-6 text-slate-400">
-                            Have a technical gap to fill? Tell us what needs
-                            attention.
-                        </p>
+                        <h2 className="font-mono text-xs uppercase tracking-[0.18em] text-slate-400">
+                            Let’s get to work
+                        </h2>
                         <button
                             type="button"
                             onClick={onRequestClick}
-                            className="mt-5 rounded-lg bg-white px-4 py-2.5 text-sm font-semibold text-slate-950 transition hover:bg-cyan-100"
+                            className={`mt-5 inline-flex items-center gap-2 rounded-sm text-sm font-medium text-cyan-300 transition hover:text-cyan-100 ${focus}`}
                         >
-                            Contact an expert
+                            Start a request{" "}
+                            <ArrowUpRight size={18} aria-hidden="true" />
                         </button>
+                        <Link
+                            href="/login"
+                            className={`mt-4 block w-fit rounded-sm text-sm text-slate-300 hover:text-cyan-300 ${focus}`}
+                        >
+                            Team login
+                        </Link>
                     </div>
                 </div>
-
-                <div className="mt-16 flex flex-col gap-3 border-t border-white/10 pt-5 text-xs text-slate-500 sm:flex-row sm:items-center sm:justify-between">
-                    <p>SignalStack. Keep the signal moving.</p>
-                    <p>© SignalStack</p>
+                <div className="mt-14 flex flex-col gap-3 border-t border-white/10 pt-6 font-mono text-xs text-slate-400 sm:flex-row sm:justify-between">
+                    <p>© SignalStack. All rights reserved.</p>
+                    <p>Keep the signal moving.</p>
                 </div>
             </div>
         </footer>
