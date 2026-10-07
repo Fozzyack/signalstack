@@ -3,14 +3,7 @@
 import Image from "next/image";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
-import {
-    ArrowLeft,
-    ArrowRight,
-    Check,
-    Eye,
-    EyeSlash,
-    Stack,
-} from "@phosphor-icons/react";
+import { ArrowLeft, ArrowRight, Eye, EyeSlash } from "@phosphor-icons/react";
 import { useEffect, useRef, useState } from "react";
 
 const LoginPage = () => {
@@ -102,89 +95,37 @@ const LoginPage = () => {
 
     return (
         <main className="min-h-svh bg-slate-950 text-white lg:grid lg:grid-cols-2">
-            <section className="relative flex min-w-0 flex-col overflow-hidden border-b border-white/10 bg-slate-900/40 px-5 py-5 sm:px-10 lg:justify-between lg:border-r lg:border-b-0 lg:p-12 xl:p-16">
+            <section className="relative flex min-h-64 min-w-0 flex-col justify-between gap-10 overflow-hidden border-b border-white/10 bg-slate-950 p-6 sm:min-h-80 sm:p-10 lg:min-h-0 lg:border-r lg:border-b-0 lg:p-12 xl:p-16">
+                <video
+                    className="absolute inset-0 z-0 h-full w-full object-cover"
+                    autoPlay
+                    loop
+                    muted
+                    playsInline
+                    aria-hidden="true"
+                >
+                    <source src="/loginvid-optimized.mp4" type="video/mp4" />
+                </video>
+                <div
+                    aria-hidden="true"
+                    className="absolute inset-0 z-10 bg-slate-950/50"
+                />
+                <div
+                    aria-hidden="true"
+                    className="absolute inset-0 z-10 bg-gradient-to-t from-slate-950 via-slate-950/20 to-slate-950/70"
+                />
+
                 <Link
                     href="/"
                     aria-label="SignalStack home"
-                    className="inline-flex w-fit items-center gap-3 rounded-lg focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-cyan-300"
+                    className="relative z-20 inline-flex w-fit items-center gap-3 rounded-lg focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-cyan-300"
                 >
                     <Image src="/logo.png" alt="" width={44} height={44} />
                     <span className="text-lg font-semibold tracking-tight">
                         SignalStack<span className="text-cyan-300">.</span>
                     </span>
                 </Link>
-                <div className="relative hidden w-full max-w-lg py-16 lg:block">
-                    <p className="mb-5 font-mono text-xs uppercase tracking-[0.2em] text-cyan-300">
-                        Less noise. More progress.
-                    </p>
-                    <h2 className="text-5xl leading-[1.08] font-semibold tracking-[-0.045em] xl:text-6xl">
-                        Good work starts
-                        <br />
-                        with a clear signal.
-                    </h2>
-                    <p className="mt-6 max-w-sm text-base leading-7 text-slate-400">
-                        Bring requests, people, and next steps into focus. Your
-                        team’s work, all in one place.
-                    </p>
-                    <div
-                        aria-hidden="true"
-                        className="relative mt-12 rounded-2xl border border-white/10 bg-slate-950/70 p-6 shadow-2xl shadow-cyan-950/20"
-                    >
-                        <div className="flex items-center justify-between gap-3 border-b border-white/10 pb-5">
-                            <span className="font-mono text-[10px] uppercase tracking-[0.18em] text-slate-400">
-                                From request to resolution
-                            </span>
-                            <Stack
-                                size={20}
-                                className="shrink-0 text-cyan-300"
-                            />
-                        </div>
-                        <div className="relative mt-6 space-y-4">
-                            <div className="absolute top-5 bottom-5 left-5 w-px bg-linear-to-b from-cyan-300/70 to-cyan-300/10" />
-                            {[
-                                {
-                                    number: "01",
-                                    title: "Capture the request",
-                                    detail: "Give every task a starting point.",
-                                },
-                                {
-                                    number: "02",
-                                    title: "Connect the right people",
-                                    detail: "Keep ownership clear.",
-                                },
-                                {
-                                    number: "03",
-                                    title: "Move work forward",
-                                    detail: "Follow progress through to done.",
-                                },
-                            ].map((step, index) => (
-                                <div
-                                    key={step.number}
-                                    className="relative flex items-center gap-4"
-                                >
-                                    <span
-                                        className={`flex size-10 shrink-0 items-center justify-center rounded-xl border font-mono text-xs ${index === 2 ? "border-cyan-300 bg-cyan-300 text-slate-950" : "border-slate-700 bg-slate-900 text-cyan-300"}`}
-                                    >
-                                        {index === 2 ? (
-                                            <Check size={18} weight="bold" />
-                                        ) : (
-                                            step.number
-                                        )}
-                                    </span>
-                                    <div className="min-w-0 flex-1 rounded-xl border border-white/5 bg-white/[0.025] px-4 py-3">
-                                        <p className="text-sm font-medium text-slate-200">
-                                            {step.title}
-                                        </p>
-                                        <p className="mt-1 text-xs leading-5 text-slate-400">
-                                            {step.detail}
-                                        </p>
-                                    </div>
-                                </div>
-                            ))}
-                        </div>
-                    </div>
-                </div>
-                <p className="hidden font-mono text-[10px] uppercase tracking-[0.2em] text-slate-400 lg:block">
+                <p className="relative z-20 font-mono text-[10px] uppercase tracking-[0.2em] text-slate-300">
                     A clearer way to work together
                 </p>
             </section>
