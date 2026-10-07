@@ -3,7 +3,6 @@
 import { X } from "@phosphor-icons/react";
 import { createPortal } from "react-dom";
 import { useEffect, useRef, useState } from "react";
-import { getBackendURL } from "@/lib/getEnvVars";
 
 const REQUEST_COOLDOWN_MS = 3000;
 
@@ -110,7 +109,7 @@ const CreateRequestModal = ({
         setIsSubmitting(true);
 
         try {
-            const res = await fetch(`${getBackendURL()}/requests`, {
+            const res = await fetch("/api/requests", {
                 method: "POST",
                 headers: {
                     "Content-Type": "application/json",

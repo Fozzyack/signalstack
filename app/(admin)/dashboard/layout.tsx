@@ -1,22 +1,14 @@
-"use client";
-
 import { DashboardHeader } from "@/components/dashboard/DashboardHeader";
 import { DashboardSidebar } from "@/components/dashboard/DashboardSidebar";
-import apiFetch from "@/lib/apiFetch";
-import { getBackendURL } from "@/lib/getEnvVars";
-import { useEffect } from "react";
+import { getSessionUser } from "@/lib/server/auth";
+import { redirect } from "next/navigation";
 
-export default function DashboardLayout({
+export default async function DashboardLayout({
     children,
 }: Readonly<{
     children: React.ReactNode;
 }>) {
-    useEffect(() => {
-        const checkAuth = async () => {
-            await apiFetch(`${getBackendURL()}/auth/check`);
-        };
-        checkAuth();
-    }, []);
+    if (!await getSessionUser()) redirect("/login");
     return (
         <div className="flex h-screen overflow-hidden bg-slate-950 text-white">
             <DashboardSidebar />

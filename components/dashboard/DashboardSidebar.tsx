@@ -2,22 +2,33 @@
 
 import {
     CheckCircle,
-    Clock,
     GearSix,
     Pulse,
     SignOut,
 } from "@phosphor-icons/react";
 import Image from "next/image";
 import { usePathname } from "next/navigation";
+import { useState } from "react";
 
 export function DashboardSidebar() {
     const pathname = usePathname();
+    const [loggingOut, setLoggingOut] = useState(false);
+    const [logoutError, setLogoutError] = useState("");
     const isDashboard = pathname === "/dashboard";
     const isMyTasks = pathname.startsWith("/dashboard/my-tasks");
 
-    const logout = () => {
-        localStorage.removeItem("token");
-        window.location.href = "/login";
+    const logout = async () => {
+        if (loggingOut) return;
+        setLoggingOut(true);
+        setLogoutError("");
+        try {
+            const response = await fetch("/api/auth/logout", { method: "POST" });
+            if (!response.ok) throw new Error("Unable to log out. Please try again.");
+            window.location.href = "/login";
+        } catch {
+            setLogoutError("Unable to log out. Please try again.");
+            setLoggingOut(false);
+        }
     };
 
     return (
@@ -78,10 +89,12 @@ export function DashboardSidebar() {
                 <button
                     className="mt-5 flex w-full items-center gap-3 rounded-xl border border-white/10 bg-white/[0.04] p-3 text-sm text-slate-400 transition hover:border-white/20 hover:text-white"
                     onClick={logout}
+                    disabled={loggingOut}
                 >
                     <SignOut size={18} />
-                    <span>Log out</span>
+                    <span>{loggingOut ? "Logging out..." : "Log out"}</span>
                 </button>
+                {logoutError && <p role="alert" className="mt-2 text-xs text-red-300">{logoutError}</p>}
             </div>
         </aside>
     );

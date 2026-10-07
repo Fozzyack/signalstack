@@ -24,7 +24,7 @@ export type RequestAssignment = {
     user_name: string;
     role: string;
     assigned_at: string;
-    unassigned_at?: string;
-    personal_deadline?: string;
-    completed_at?: string;
+    unassigned_at?: string | null;
+    personal_deadline?: string | null;
+    completed_at?: string | null;
 };

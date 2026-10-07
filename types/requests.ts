@@ -8,7 +8,7 @@ export type Request = {
     status: string;
     created_at: string;
     updated_at: string;
-    resolved_at?: string;
+    resolved_at?: string | null;
     assignments: RequestAssignment[];
 };
 
@@ -18,8 +18,8 @@ export type RequestAssignment = {
     user_id: string;
     role: "lead" | "contributor";
     assigned_at: string;
-    unassigned_at?: string;
-    personal_deadline?: string;
-    completed_at?: string;
+    unassigned_at?: string | null;
+    personal_deadline?: string | null;
+    completed_at?: string | null;
     user_name?: string;
 };

@@ -1,0 +1,27 @@
+name: signalstack
+
+services:
+  postgres:
+    image: postgres:16-alpine
+    environment:
+      POSTGRES_DB: signalstack
+      POSTGRES_USER: signalstack
+      POSTGRES_PASSWORD: signalstack_dev
+    ports:
+      - "127.0.0.1:${POSTGRES_PORT:-5432}:5432"
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U signalstack -d signalstack"]
+      interval: 5s
+      timeout: 5s
+      retries: 5
+
+  mailpit:
+    image: axllent/mailpit:v1.29
+    ports:
+      - "127.0.0.1:${SMTP_PORT:-1025}:1025"
+      - "127.0.0.1:${MAILPIT_PORT:-8025}:8025"
+
+volumes:
+  postgres_data:

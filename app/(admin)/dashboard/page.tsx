@@ -7,7 +7,6 @@ import { experts } from "@/components/dashboard/data";
 import { RequestQueue } from "@/components/dashboard/RequestQueue";
 import { TeamWorkload } from "@/components/dashboard/TeamWorkload";
 import type { RequestAssignment } from "@/components/dashboard/types";
-import { getBackendURL } from "@/lib/getEnvVars";
 import apiFetch from "@/lib/apiFetch";
 import type { Request } from "@/types/requests";
 
@@ -29,9 +28,9 @@ export default function DashboardPage() {
         try {
             const [requestsResponse, userResponse, assignmentsResponse] =
                 await Promise.all([
-                    apiFetch(`${getBackendURL()}/requests`),
-                    apiFetch(`${getBackendURL()}/users/me`),
-                    apiFetch(`${getBackendURL()}/request-assignments`),
+                    apiFetch("/api/requests"),
+                    apiFetch("/api/users/me"),
+                    apiFetch("/api/request-assignments"),
                 ]);
             if (!requestsResponse.ok || !userResponse.ok || !assignmentsResponse.ok) {
                 throw new Error("Unable to load the dashboard data.");
@@ -101,7 +100,7 @@ export default function DashboardPage() {
         if (claiming.includes(id)) return;
         setClaiming((current) => [...current, id]);
         try {
-            const response = await apiFetch(`${getBackendURL()}/request-assignments`, {
+            const response = await apiFetch("/api/request-assignments", {
                 method: "POST",
                 body: JSON.stringify({ request_id: id, role: "lead" }),
             });

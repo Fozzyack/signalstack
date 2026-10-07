@@ -2,7 +2,6 @@
 
 import { useEffect, useState } from "react";
 import apiFetch from "@/lib/apiFetch";
-import { getBackendURL } from "@/lib/getEnvVars";
 
 type User = {
     name: string;
@@ -24,7 +23,7 @@ const SettingsPage = () => {
     useEffect(() => {
         const getUser = async () => {
             try {
-                const response = await apiFetch(`${getBackendURL()}/users/me`);
+                const response = await apiFetch("/api/users/me");
                 if (!response.ok)
                     throw new Error("Unable to load your settings.");
                 const data = (await response.json()) as User;
@@ -50,7 +49,7 @@ const SettingsPage = () => {
         setError("");
 
         try {
-            const response = await apiFetch(`${getBackendURL()}/users/me`, {
+            const response = await apiFetch("/api/users/me", {
                 method: "PUT",
                 body: JSON.stringify({
                     name: user.name,

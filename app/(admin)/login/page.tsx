@@ -1,6 +1,5 @@
 "use client";
 
-import { getBackendURL, getTokenName } from "@/lib/getEnvVars";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
@@ -31,7 +30,7 @@ const LoginPage = () => {
         setIsSubmitting(true);
 
         try {
-            const res = await fetch(`${getBackendURL()}/auth/login`, {
+            const res = await fetch("/api/auth/login", {
                 method: "POST",
                 headers: {
                     "Content-Type": "application/json",
@@ -49,7 +48,6 @@ const LoginPage = () => {
                 return;
             }
 
-            localStorage.setItem(getTokenName(), data.token);
             setSuccess("Login successful. Redirecting...");
             window.setTimeout(() => {
                 window.location.href = "/dashboard";
@@ -63,18 +61,19 @@ const LoginPage = () => {
 
     useEffect(() => {
         const checkAuth = async () => {
-            const res = await fetch(`${getBackendURL()}/auth/check`, {
-                headers: {
-                    "Authorization": `Bearer ${localStorage.getItem(getTokenName())}`,
+            try {
+                const res = await fetch("/api/auth/check", { cache: "no-store" });
+                if (res.ok) {
+                    router.replace("/dashboard");
                 }
-            });
-            if (res.ok) {
-                router.push("/dashboard");
+            } catch {
+                setError("Unable to connect to the server. Please try again.");
+            } finally {
+                setLoading(false);
             }
-            setLoading(false);
-        }
+        };
         checkAuth();
-    }, [])
+    }, [router]);
 
     if (loading) {
         return <div className="flex h-screen items-center justify-center text-white bg-slate-950">Loading...</div>;

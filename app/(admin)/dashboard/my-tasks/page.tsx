@@ -16,7 +16,6 @@ import {
 } from "@/components/dashboard/MyTaskCard";
 import type { Request } from "@/types/requests";
 import apiFetch from "@/lib/apiFetch";
-import { getBackendURL } from "@/lib/getEnvVars";
 
 const filterOptions = ["All tasks", "In progress", "Waiting", "New"];
 
@@ -53,7 +52,7 @@ export default function MyTasksPage() {
         const getTasks = async () => {
             try {
                 const response = await apiFetch(
-                    `${getBackendURL()}/users/me/requests`,
+                    "/api/users/me/requests",
                 );
                 if (!response.ok) {
                     throw new Error("Unable to load your tasks.");
