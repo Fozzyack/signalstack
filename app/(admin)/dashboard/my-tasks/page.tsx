@@ -16,23 +16,29 @@ import {
 } from "@/components/dashboard/MyTaskCard";
 import type { Request } from "@/types/requests";
 import apiFetch from "@/lib/apiFetch";
+import {
+    TASK_STATUS_OPTIONS,
+    toTaskStatus,
+    type TaskStatus,
+} from "@/lib/taskStatus";
 
-const filterOptions = ["All tasks", "In progress", "Waiting", "New"];
+type TaskFilter = "all" | TaskStatus;
+
+const filterOptions: ReadonlyArray<{ value: TaskFilter; label: string }> = [
+    { value: "all", label: "All" },
+    ...TASK_STATUS_OPTIONS.map(({ value, label }) => ({ value, label })),
+];
 
 function toPersonalTask(request: Request): PersonalTask {
     const assignment = request.assignments?.[0];
 
     return {
         id: request.reference,
+        requestId: request.id,
         title: request.title,
         client: request.client_name,
         email: request.client_email,
-        status:
-            request.status === "in_progress"
-                ? "In progress"
-                : request.status === "waiting"
-                  ? "Waiting"
-                  : "New",
+        status: toTaskStatus(request.status),
         due: assignment?.personal_deadline?.slice(0, 10) ?? "",
         detail: request.description,
         notes: [],
@@ -44,7 +50,8 @@ export default function MyTasksPage() {
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState("");
     const [search, setSearch] = useState("");
-    const [activeFilter, setActiveFilter] = useState("All tasks");
+    const [activeFilter, setActiveFilter] = useState<TaskFilter>("all");
+    const [statusError, setStatusError] = useState("");
     const [currentPage, setCurrentPage] = useState(1);
     const pageSize = 3;
 
@@ -71,9 +78,41 @@ export default function MyTasksPage() {
         getTasks();
     }, []);
 
+    const handleStatusChange = async (
+        requestId: string,
+        status: TaskStatus,
+    ) => {
+        const previousTasks = tasks;
+        setStatusError("");
+        setTasks((current) =>
+            current.map((task) =>
+                task.requestId === requestId ? { ...task, status } : task,
+            ),
+        );
+        try {
+            const response = await apiFetch(`/api/requests/${requestId}`, {
+                method: "PATCH",
+                body: JSON.stringify({ status }),
+            });
+            if (!response.ok) {
+                const data = await response.json().catch(() => null);
+                throw new Error(
+                    data?.error ?? "Unable to update the task status.",
+                );
+            }
+        } catch (requestError) {
+            setTasks(previousTasks);
+            setStatusError(
+                requestError instanceof Error
+                    ? requestError.message
+                    : "Unable to update the task status.",
+            );
+        }
+    };
+
     const filteredTasks = tasks.filter(
         (task) =>
-            (activeFilter === "All tasks" || task.status === activeFilter) &&
+            (activeFilter === "all" || task.status === activeFilter) &&
             [task.id, task.title, task.client, task.email, task.detail]
                 .join(" ")
                 .toLowerCase()
@@ -118,7 +157,7 @@ export default function MyTasksPage() {
                             label="In progress"
                             value={
                                 tasks.filter(
-                                    (task) => task.status === "In progress",
+                                    (task) => task.status === "in_progress",
                                 ).length
                             }
                             icon={<Clock size={17} />}
@@ -177,22 +216,30 @@ export default function MyTasksPage() {
                                 <div className="flex rounded-lg border border-white/10 bg-white/[0.04] p-1">
                                     {filterOptions.map((filter) => (
                                         <button
-                                            key={filter}
+                                            key={filter.value}
                                             onClick={() => {
-                                                setActiveFilter(filter);
+                                                setActiveFilter(filter.value);
                                                 setCurrentPage(1);
                                             }}
-                                            className={`rounded-md px-3 py-1.5 text-xs font-medium transition ${activeFilter === filter ? "bg-cyan-300 text-slate-950" : "text-slate-500 hover:text-white"}`}
+                                            className={`rounded-md px-3 py-1.5 text-xs font-medium transition ${activeFilter === filter.value ? "bg-cyan-300 text-slate-950" : "text-slate-500 hover:text-white"}`}
                                         >
-                                            {filter === "All tasks"
+                                            {filter.value === "all"
                                                 ? "All"
-                                                : filter}
+                                                : filter.label}
                                         </button>
                                     ))}
                                 </div>
                             </div>
                         </div>
                         <div className="mt-6 space-y-4">
+                            {statusError && (
+                                <div
+                                    role="alert"
+                                    className="rounded-xl border border-rose-300/20 bg-rose-300/[0.05] px-4 py-3 text-sm text-rose-200"
+                                >
+                                    {statusError}
+                                </div>
+                            )}
                             {loading && <TaskListSkeleton />}
                             {!loading && error && (
                                 <div className="rounded-xl border border-rose-300/20 bg-rose-300/[0.05] px-5 py-10 text-center text-sm text-rose-200">
@@ -202,7 +249,11 @@ export default function MyTasksPage() {
                             {!loading &&
                                 !error &&
                                 visibleTasks.map((task) => (
-                                    <MyTaskCard key={task.id} task={task} />
+                                    <MyTaskCard
+                                        key={task.id}
+                                        task={task}
+                                        onStatusChange={handleStatusChange}
+                                    />
                                 ))}
                             {!loading &&
                                 !error &&

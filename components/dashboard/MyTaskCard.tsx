@@ -2,28 +2,47 @@
 
 import {
     Calendar,
+    CaretDown,
     Check,
     Clock,
     NotePencil,
     Plus,
 } from "@phosphor-icons/react";
 import { useState } from "react";
+import { TASK_STATUS_OPTIONS, type TaskStatus } from "@/lib/taskStatus";
 
 export type PersonalTask = {
     id: string;
+    requestId: string;
     title: string;
     client: string;
     email: string;
-    status: "In progress" | "Waiting" | "New";
+    status: TaskStatus;
     due: string;
     detail: string;
     notes: string[];
 };
 
-export function MyTaskCard({ task }: { task: PersonalTask }) {
+type MyTaskCardProps = {
+    task: PersonalTask;
+    onStatusChange: (requestId: string, status: TaskStatus) => Promise<void>;
+};
+
+export function MyTaskCard({ task, onStatusChange }: MyTaskCardProps) {
     const [notes, setNotes] = useState(task.notes);
     const [note, setNote] = useState("");
     const [deadline, setDeadline] = useState(task.due);
+    const [isSavingStatus, setIsSavingStatus] = useState(false);
+
+    const changeStatus = async (status: TaskStatus) => {
+        if (status === task.status || isSavingStatus) return;
+        setIsSavingStatus(true);
+        try {
+            await onStatusChange(task.requestId, status);
+        } finally {
+            setIsSavingStatus(false);
+        }
+    };
 
     const addNote = () => {
         const trimmedNote = note.trim();
@@ -40,9 +59,36 @@ export function MyTaskCard({ task }: { task: PersonalTask }) {
                         <span className="font-mono text-[11px] text-slate-600">
                             {task.id}
                         </span>
-                        <span className="rounded-full border border-cyan-300/20 bg-cyan-300/10 px-2 py-0.5 text-[10px] font-semibold uppercase tracking-wider text-cyan-200">
-                            {task.status}
-                        </span>
+                        <label className="relative inline-flex items-center">
+                            <span className="sr-only">
+                                Status for {task.title}
+                            </span>
+                            <select
+                                value={task.status}
+                                onChange={(event) =>
+                                    changeStatus(
+                                        event.target.value as TaskStatus,
+                                    )
+                                }
+                                disabled={isSavingStatus}
+                                className="cursor-pointer appearance-none rounded-full border border-cyan-300/20 bg-cyan-300/10 py-0.5 pr-6 pl-2 text-[10px] font-semibold uppercase tracking-wider text-cyan-200 outline-none transition hover:border-cyan-300/40 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-cyan-300 disabled:cursor-wait disabled:opacity-60"
+                            >
+                                {TASK_STATUS_OPTIONS.map((option) => (
+                                    <option
+                                        key={option.value}
+                                        value={option.value}
+                                        className="bg-slate-900 text-slate-100"
+                                    >
+                                        {option.label}
+                                    </option>
+                                ))}
+                            </select>
+                            <CaretDown
+                                size={11}
+                                aria-hidden="true"
+                                className="pointer-events-none absolute right-2 text-cyan-200"
+                            />
+                        </label>
                     </div>
                     <h2 className="mt-3 text-lg font-medium text-slate-100">
                         {task.title}
