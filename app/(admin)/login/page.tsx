@@ -94,7 +94,7 @@ const LoginPage = () => {
     }
 
     return (
-        <main className="min-h-svh bg-slate-950 text-white lg:grid lg:grid-cols-2">
+        <main className="min-h-svh bg-slate-950 text-white lg:grid lg:grid-cols-[1fr_2fr]">
             <section className="relative flex min-h-64 min-w-0 flex-col justify-between gap-10 overflow-hidden border-b border-white/10 bg-slate-950 p-6 sm:min-h-80 sm:p-10 lg:min-h-0 lg:border-r lg:border-b-0 lg:p-12 xl:p-16">
                 <video
                     className="absolute inset-0 z-0 h-full w-full object-cover"
@@ -278,9 +278,15 @@ const LoginPage = () => {
                             Need access? Contact your team administrator.
                         </p>
                     </div>
-                    <p className="pt-6 font-mono text-[10px] uppercase tracking-[0.16em] text-slate-400">
-                        SignalStack / Team workspace
-                    </p>
+                    <div className="flex flex-col gap-2 pt-6">
+                        <p className="font-mono text-[10px] uppercase tracking-[0.16em] text-slate-400">
+                            SignalStack / Team workspace
+                        </p>
+                        <p className="text-xs leading-6 text-slate-400">
+                            © SignalStack. All rights reserved. Keep the signal
+                            moving.
+                        </p>
+                    </div>
                 </div>
             </section>
         </main>
