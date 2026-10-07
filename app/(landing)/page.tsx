@@ -2,6 +2,7 @@
 
 import {
     ArrowRight,
+    ArrowDown,
     Cloud,
     Code,
     Headset,
@@ -101,44 +102,72 @@ export default function Home() {
                 <div className="absolute inset-0 z-10 bg-gradient-to-r from-slate-950 via-slate-950/70 to-slate-950/20" />
                 <div className="absolute inset-x-0 bottom-0 z-10 h-48 bg-gradient-to-t from-slate-950 to-transparent" />
 
-                <div className="relative z-20">
-                    <section className="mx-auto flex min-h-[calc(100vh-88px)] w-full max-w-7xl items-end px-6 py-16 sm:px-8 lg:px-12 lg:py-24">
+                <div className="relative z-20 flex min-h-screen flex-col">
+                    <section className="mx-auto flex w-full max-w-7xl flex-1 items-center px-6 pb-14 pt-32 sm:px-8 lg:px-12 lg:pt-40">
                         <div className="max-w-3xl">
-                            <p className="mb-6 text-sm font-semibold uppercase tracking-[0.3em] text-cyan-300">
-                                IT contracting made simple
+                            <p className={`${eyebrow} flex items-center gap-3`}>
+                                <span className="h-1.5 w-1.5 rounded-full bg-cyan-300" />
+                                IT contracting, without the noise
                             </p>
-                            <h1 className="max-w-3xl text-5xl font-semibold leading-[0.98] tracking-tight text-balance sm:text-7xl lg:text-8xl">
-                                The right people for work that cannot wait.
-                            </h1>
-                            <div className="mt-8 flex flex-col gap-8 sm:flex-row sm:items-end">
-                                <p className="max-w-xl text-base leading-7 text-slate-200 sm:text-lg">
-                                    We connect businesses with experienced IT
-                                    contractors across infrastructure, support,
-                                    cloud, security, and software delivery.
-                                </p>
-                            </div>
-                            <button
-                                type="button"
-                                onClick={openRequestModal}
-                                className="mt-8 inline-flex shrink-0 items-center justify-center rounded-lg bg-white px-5 py-3 text-sm font-semibold uppercase text-slate-950 shadow-xl shadow-cyan-950/30 transition hover:bg-cyan-100"
-                            >
-                                Contact an expert
-                            </button>
-                            <div className="mt-10 flex flex-wrap gap-2 border-t border-white/15 pt-5">
-                                <span className="mr-2 py-2 text-xs font-semibold uppercase tracking-[0.2em] text-slate-400">
-                                    Specialist coverage
+                            <h1 className="mt-7 max-w-3xl text-[2.8rem] font-medium leading-[1.06] tracking-[-0.055em] text-balance sm:text-6xl xl:text-7xl">
+                                The right expertise.
+                                <br />
+                                <span className="text-cyan-300">
+                                    Right when
+                                    <br className="hidden xl:block" /> it
+                                    matters.
                                 </span>
-                                {serviceAreas.map(({ name }) => (
+                            </h1>
+                            <p className="mt-7 max-w-md text-base leading-7 text-slate-200 sm:text-lg sm:leading-8">
+                                Connect with experienced IT contractors who help
+                                your team solve the challenge in front of you.
+                                Less searching. More moving forward.
+                            </p>
+                            <div className="mt-9 flex flex-wrap items-center gap-6">
+                                <button
+                                    type="button"
+                                    onClick={openRequestModal}
+                                    className={primaryButton}
+                                >
+                                    Find your expert{" "}
+                                    <ArrowRight size={18} aria-hidden="true" />
+                                </button>
+                                <a
+                                    href="#how-it-works"
+                                    className={`inline-flex items-center gap-2 rounded-sm py-2 text-sm text-slate-200 hover:text-white ${focus}`}
+                                >
+                                    How it works{" "}
+                                    <ArrowDown size={16} aria-hidden="true" />
+                                </a>
+                            </div>
+                            <p className="mt-6 font-mono text-[11px] text-slate-300">
+                                Your brief. The right specialist. A clear next
+                                step.
+                            </p>
+                        </div>
+                    </section>
+                    <div className="mx-auto w-full max-w-7xl px-6 pb-10 sm:px-8 lg:px-12 lg:pb-12">
+                        <div className="flex flex-col gap-5 border-t border-white/15 pt-7 lg:flex-row lg:items-center lg:justify-between">
+                            <p className="shrink-0 font-mono text-[10px] uppercase tracking-[0.18em] text-slate-300">
+                                Expertise across your stack
+                            </p>
+                            <div className="flex flex-wrap gap-x-7 gap-y-4">
+                                {serviceAreas.map(({ name, icon: Icon }) => (
                                     <span
                                         key={name}
-                                        className="rounded-full border border-white/15 bg-white/5 px-3 py-2 text-xs text-slate-200"
+                                        className="flex items-center gap-2 text-xs text-slate-200"
                                     >
+                                        <Icon
+                                            size={17}
+                                            className="text-cyan-300"
+                                            aria-hidden="true"
+                                        />
                                         {name}
                                     </span>
                                 ))}
                             </div>
                         </div>
-                    </section>
+                    </div>
                 </div>
             </div>
             <section
