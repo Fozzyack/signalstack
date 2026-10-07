@@ -52,16 +52,23 @@ All mutations enforce same-origin requests. API clients must send `Origin` and
 JSON requests must send `Content-Type: application/json`. If a reverse proxy
 changes the request origin, configure `APP_URL` to the public origin.
 
-| Route | Methods | Access |
-| --- | --- | --- |
-| `/api/health` | GET | Public |
-| `/api/auth/login` | POST | Public |
-| `/api/auth/logout` | POST | Same-origin |
-| `/api/auth/check` | GET | Authenticated |
-| `/api/requests` | GET / POST | Authenticated read / public submission |
-| `/api/request-assignments` | GET / POST | Authenticated |
-| `/api/users/me` | GET / PUT | Authenticated |
-| `/api/users/me/requests` | GET | Authenticated |
+| Route                      | Methods    | Access                                 |
+| -------------------------- | ---------- | -------------------------------------- |
+| `/api/health`              | GET        | Public                                 |
+| `/api/auth/login`          | POST       | Public                                 |
+| `/api/auth/logout`         | POST       | Same-origin                            |
+| `/api/auth/check`          | GET        | Authenticated                          |
+| `/api/requests`            | GET / POST | Authenticated read / public submission |
+| `/api/requests/[id]`       | PATCH      | Authenticated, assignee only           |
+| `/api/request-assignments` | GET / POST | Authenticated                          |
+| `/api/users/me`            | GET / PUT  | Authenticated                          |
+| `/api/users/me/requests`   | GET        | Authenticated                          |
+
+Task state is one of `new`, `in_progress`, or `waiting`; there is deliberately no
+completed/resolved state. The values and their display labels are defined in
+`lib/taskStatus.ts` and validated by `requestStatusField` in `lib/validation.ts`.
+Each status change is recorded in the `request_events` table as a
+`status_changed` event.
 
 ## Deployment
 
