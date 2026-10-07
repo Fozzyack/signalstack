@@ -2,8 +2,6 @@
 
 import {
     ArrowRight,
-    ArrowDown,
-    Check,
     Cloud,
     Code,
     Headset,
@@ -88,174 +86,61 @@ export default function Home() {
             id="main-content"
             className="min-h-screen overflow-hidden bg-slate-950 text-white"
         >
-            <section className="relative px-5 pb-12 pt-36 sm:px-8 sm:pt-44 lg:px-12 lg:pb-16">
-                <div
+            <div className="relative isolate min-h-screen overflow-hidden bg-slate-950">
+                <video
+                    className="absolute inset-0 z-0 h-full w-full object-cover"
+                    autoPlay
+                    loop
+                    muted
+                    playsInline
                     aria-hidden="true"
-                    className="pointer-events-none absolute -right-48 top-12 h-[600px] w-[600px] rounded-full bg-cyan-400/[0.05] blur-3xl"
-                />
-                <div className="relative mx-auto max-w-7xl">
-                    <div className="grid items-center gap-14 lg:grid-cols-[1.1fr_1fr] lg:gap-12">
-                        <div>
-                            <p className={`${eyebrow} flex items-center gap-3`}>
-                                <span className="h-1.5 w-1.5 rounded-full bg-cyan-300" />
-                                IT contracting, without the noise
+                >
+                    <source src="/landingvid-optimized.mp4" type="video/mp4" />
+                </video>
+                <div className="absolute inset-0 z-10 bg-slate-950/55" />
+                <div className="absolute inset-0 z-10 bg-gradient-to-r from-slate-950 via-slate-950/70 to-slate-950/20" />
+                <div className="absolute inset-x-0 bottom-0 z-10 h-48 bg-gradient-to-t from-slate-950 to-transparent" />
+
+                <div className="relative z-20">
+                    <section className="mx-auto flex min-h-[calc(100vh-88px)] w-full max-w-7xl items-end px-6 py-16 sm:px-8 lg:px-12 lg:py-24">
+                        <div className="max-w-3xl">
+                            <p className="mb-6 text-sm font-semibold uppercase tracking-[0.3em] text-cyan-300">
+                                IT contracting made simple
                             </p>
-                            <h1 className="mt-7 max-w-2xl text-[2.8rem] font-medium leading-[1.06] tracking-[-0.055em] text-balance sm:text-6xl xl:text-7xl">
-                                The right expertise.
-                                <br />
-                                <span className="text-cyan-300">
-                                    Right when
-                                    <br className="hidden xl:block" /> it
-                                    matters.
-                                </span>
+                            <h1 className="max-w-3xl text-5xl font-semibold leading-[0.98] tracking-tight text-balance sm:text-7xl lg:text-8xl">
+                                The right people for work that cannot wait.
                             </h1>
-                            <p className="mt-7 max-w-md text-base leading-7 text-slate-400 sm:text-lg sm:leading-8">
-                                Connect with experienced IT contractors who help
-                                your team solve the challenge in front of you.
-                                Less searching. More moving forward.
-                            </p>
-                            <div className="mt-9 flex flex-wrap items-center gap-6">
-                                <button
-                                    type="button"
-                                    onClick={openRequestModal}
-                                    className={primaryButton}
-                                >
-                                    Find your expert{" "}
-                                    <ArrowRight size={18} aria-hidden="true" />
-                                </button>
-                                <a
-                                    href="#how-it-works"
-                                    className={`inline-flex items-center gap-2 rounded-sm py-2 text-sm text-slate-300 hover:text-white ${focus}`}
-                                >
-                                    How it works{" "}
-                                    <ArrowDown size={16} aria-hidden="true" />
-                                </a>
+                            <div className="mt-8 flex flex-col gap-8 sm:flex-row sm:items-end">
+                                <p className="max-w-xl text-base leading-7 text-slate-200 sm:text-lg">
+                                    We connect businesses with experienced IT
+                                    contractors across infrastructure, support,
+                                    cloud, security, and software delivery.
+                                </p>
                             </div>
-                            <p className="mt-6 font-mono text-[11px] text-slate-400">
-                                Your brief. The right specialist. A clear next
-                                step.
-                            </p>
-                        </div>
-                        <figure className="relative min-w-0 rounded-2xl border border-white/15 bg-slate-900/60 p-4 shadow-2xl shadow-black/20 sm:p-6">
-                            <figcaption className="mb-7 flex flex-wrap items-center justify-between gap-2 border-b border-white/10 pb-5">
-                                <span className="flex items-center gap-2 text-sm font-medium">
-                                    <Stack
-                                        size={20}
-                                        className="text-cyan-300"
-                                        aria-hidden="true"
-                                    />{" "}
-                                    A clearer path to expertise
+                            <button
+                                type="button"
+                                onClick={openRequestModal}
+                                className="mt-8 inline-flex shrink-0 items-center justify-center rounded-lg bg-white px-5 py-3 text-sm font-semibold uppercase text-slate-950 shadow-xl shadow-cyan-950/30 transition hover:bg-cyan-100"
+                            >
+                                Contact an expert
+                            </button>
+                            <div className="mt-10 flex flex-wrap gap-2 border-t border-white/15 pt-5">
+                                <span className="mr-2 py-2 text-xs font-semibold uppercase tracking-[0.2em] text-slate-400">
+                                    Specialist coverage
                                 </span>
-                                <span className="rounded border border-white/10 px-2 py-1 font-mono text-[10px] uppercase tracking-wider text-slate-400">
-                                    Example workflow
-                                </span>
-                            </figcaption>
-                            <div className="rounded-xl border border-white/10 bg-slate-950/80 p-5">
-                                <div className="flex items-center justify-between gap-3">
-                                    <p className="font-mono text-[10px] uppercase tracking-[0.16em] text-slate-400">
-                                        01 / Your request
-                                    </p>
+                                {serviceAreas.map(({ name }) => (
                                     <span
-                                        className="h-2 w-2 rounded-full bg-cyan-300"
-                                        aria-hidden="true"
-                                    />
-                                </div>
-                                <h2 className="mt-4 text-xl font-medium tracking-tight">
-                                    A stronger cloud foundation.
-                                </h2>
-                                <p className="mt-2 text-sm leading-6 text-slate-400">
-                                    Specialist support for an upcoming cloud
-                                    migration.
-                                </p>
-                                <div className="mt-5 flex flex-wrap gap-2">
-                                    {[
-                                        "Cloud infrastructure",
-                                        "Project-based",
-                                    ].map((tag) => (
-                                        <span
-                                            key={tag}
-                                            className="rounded-md border border-white/10 bg-white/5 px-2.5 py-1.5 text-[11px] text-slate-300"
-                                        >
-                                            {tag}
-                                        </span>
-                                    ))}
-                                </div>
+                                        key={name}
+                                        className="rounded-full border border-white/15 bg-white/5 px-3 py-2 text-xs text-slate-200"
+                                    >
+                                        {name}
+                                    </span>
+                                ))}
                             </div>
-                            <div className="ml-7 flex h-12 items-center border-l border-dashed border-cyan-300/40 pl-5 font-mono text-[10px] uppercase tracking-wider text-slate-400">
-                                Matched to your brief
-                            </div>
-                            <div className="rounded-xl border border-cyan-300/25 bg-cyan-300/[0.04] p-5">
-                                <p className="font-mono text-[10px] uppercase tracking-[0.16em] text-cyan-300">
-                                    02 / The right expertise
-                                </p>
-                                <div className="mt-4 flex items-center gap-4">
-                                    <div className="flex h-12 w-12 shrink-0 items-center justify-center rounded-xl border border-cyan-300/20 bg-cyan-300/10 text-cyan-300">
-                                        <Cloud size={26} aria-hidden="true" />
-                                    </div>
-                                    <div>
-                                        <h3 className="text-base font-medium">
-                                            Cloud specialist
-                                        </h3>
-                                        <p className="mt-1 text-xs text-slate-400">
-                                            Infrastructure · Migration ·
-                                            Delivery
-                                        </p>
-                                    </div>
-                                </div>
-                                <div className="mt-5 grid gap-2 border-t border-white/10 pt-4 text-xs text-slate-300">
-                                    {[
-                                        "Relevant technical experience",
-                                        "A shared understanding of the scope",
-                                    ].map((item) => (
-                                        <p
-                                            key={item}
-                                            className="flex items-center gap-2"
-                                        >
-                                            <Check
-                                                size={14}
-                                                className="shrink-0 text-cyan-300"
-                                                aria-hidden="true"
-                                            />
-                                            {item}
-                                        </p>
-                                    ))}
-                                </div>
-                            </div>
-                            <div className="ml-7 h-7 border-l border-dashed border-cyan-300/40" />
-                            <div className="flex items-center gap-3 rounded-lg bg-cyan-300 px-4 py-3.5 text-slate-950">
-                                <Check
-                                    size={18}
-                                    weight="bold"
-                                    aria-hidden="true"
-                                />
-                                <span className="text-sm font-medium">
-                                    03 / Ready to move forward
-                                </span>
-                            </div>
-                        </figure>
-                    </div>
-                    <div className="mt-16 flex flex-col gap-5 border-t border-white/10 pt-7 lg:mt-20 lg:flex-row lg:items-center lg:justify-between">
-                        <p className="shrink-0 font-mono text-[10px] uppercase tracking-[0.18em] text-slate-400">
-                            Expertise across your stack
-                        </p>
-                        <div className="flex flex-wrap gap-x-7 gap-y-4">
-                            {serviceAreas.map(({ name, icon: Icon }) => (
-                                <span
-                                    key={name}
-                                    className="flex items-center gap-2 text-xs text-slate-300"
-                                >
-                                    <Icon
-                                        size={17}
-                                        className="text-slate-500"
-                                        aria-hidden="true"
-                                    />
-                                    {name}
-                                </span>
-                            ))}
                         </div>
-                    </div>
+                    </section>
                 </div>
-            </section>
+            </div>
             <section
                 id="how-it-works"
                 className="scroll-mt-20 border-y border-white/10 bg-slate-900/40 px-5 py-20 sm:px-8 lg:px-12 lg:py-24"
