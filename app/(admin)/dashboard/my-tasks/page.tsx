@@ -51,9 +51,7 @@ export default function MyTasksPage() {
     useEffect(() => {
         const getTasks = async () => {
             try {
-                const response = await apiFetch(
-                    "/api/users/me/requests",
-                );
+                const response = await apiFetch("/api/users/me/requests");
                 if (!response.ok) {
                     throw new Error("Unable to load your tasks.");
                 }
@@ -73,12 +71,13 @@ export default function MyTasksPage() {
         getTasks();
     }, []);
 
-    const filteredTasks = tasks.filter((task) =>
-        (activeFilter === "All tasks" || task.status === activeFilter) &&
-        [task.id, task.title, task.client, task.email, task.detail]
-            .join(" ")
-            .toLowerCase()
-            .includes(search.toLowerCase()),
+    const filteredTasks = tasks.filter(
+        (task) =>
+            (activeFilter === "All tasks" || task.status === activeFilter) &&
+            [task.id, task.title, task.client, task.email, task.detail]
+                .join(" ")
+                .toLowerCase()
+                .includes(search.toLowerCase()),
     );
     const pageCount = Math.max(1, Math.ceil(filteredTasks.length / pageSize));
     const page = Math.min(currentPage, pageCount);
@@ -105,15 +104,41 @@ export default function MyTasksPage() {
                             Your work, in focus
                         </h1>
                         <p className="mt-2 max-w-xl text-sm text-slate-400">
-                            A private queue for the requests you own and the next
-                            action each one needs.
+                            A private queue for the requests you own and the
+                            next action each one needs.
                         </p>
                     </div>
                     <div className="mt-7 grid max-w-2xl grid-cols-2 gap-3 sm:grid-cols-4">
-                        <SummaryMetric label="Open tasks" value={tasks.length} icon={<CheckCircle size={17} />} />
-                        <SummaryMetric label="In progress" value={tasks.filter((task) => task.status === "In progress").length} icon={<Clock size={17} />} />
-                        <SummaryMetric label="With deadlines" value={tasks.filter((task) => task.due.length > 0).length} icon={<Calendar size={17} />} />
-                        <SummaryMetric label="Private notes" value={tasks.reduce((total, task) => total + task.notes.length, 0)} icon={<NotePencil size={17} />} />
+                        <SummaryMetric
+                            label="Open tasks"
+                            value={tasks.length}
+                            icon={<CheckCircle size={17} />}
+                        />
+                        <SummaryMetric
+                            label="In progress"
+                            value={
+                                tasks.filter(
+                                    (task) => task.status === "In progress",
+                                ).length
+                            }
+                            icon={<Clock size={17} />}
+                        />
+                        <SummaryMetric
+                            label="With deadlines"
+                            value={
+                                tasks.filter((task) => task.due.length > 0)
+                                    .length
+                            }
+                            icon={<Calendar size={17} />}
+                        />
+                        <SummaryMetric
+                            label="Private notes"
+                            value={tasks.reduce(
+                                (total, task) => total + task.notes.length,
+                                0,
+                            )}
+                            icon={<NotePencil size={17} />}
+                        />
                     </div>
                 </div>
                 <div className="mt-8">
@@ -121,14 +146,22 @@ export default function MyTasksPage() {
                         <div className="flex flex-col justify-between gap-5 lg:flex-row lg:items-end">
                             <div>
                                 <div className="flex items-center gap-3">
-                                    <h2 className="text-xl font-semibold">Focus queue</h2>
-                                    <span className="rounded-full bg-white/[0.08] px-2 py-0.5 text-xs text-slate-400">{filteredTasks.length}</span>
+                                    <h2 className="text-xl font-semibold">
+                                        Focus queue
+                                    </h2>
+                                    <span className="rounded-full bg-white/[0.08] px-2 py-0.5 text-xs text-slate-400">
+                                        {filteredTasks.length}
+                                    </span>
                                 </div>
                                 <p className="mt-1 text-sm text-slate-500">
-                                    Sort by status to see what needs attention next.
+                                    Sort by status to see what needs attention
+                                    next.
                                 </p>
                             </div>
-                            <div className="flex flex-col gap-3 sm:flex-row">
+                            <div
+                                className="flex flex-col gap-3 sm:flex-row"
+                                suppressHydrationWarning
+                            >
                                 <div className="flex items-center gap-2 rounded-lg border border-white/10 bg-white/[0.04] px-3 py-2 text-sm text-slate-500">
                                     <MagnifyingGlass size={16} />
                                     <input
@@ -151,7 +184,9 @@ export default function MyTasksPage() {
                                             }}
                                             className={`rounded-md px-3 py-1.5 text-xs font-medium transition ${activeFilter === filter ? "bg-cyan-300 text-slate-950" : "text-slate-500 hover:text-white"}`}
                                         >
-                                            {filter === "All tasks" ? "All" : filter}
+                                            {filter === "All tasks"
+                                                ? "All"
+                                                : filter}
                                         </button>
                                     ))}
                                 </div>
@@ -164,16 +199,20 @@ export default function MyTasksPage() {
                                     {error}
                                 </div>
                             )}
-                            {!loading && !error && visibleTasks.map((task) => (
-                                <MyTaskCard key={task.id} task={task} />
-                            ))}
-                            {!loading && !error && visibleTasks.length === 0 && (
-                                <div className="rounded-xl border border-dashed border-white/10 py-14 text-center text-sm text-slate-500">
-                                    {tasks.length === 0
-                                        ? "No tasks have been assigned to you yet."
-                                        : "No tasks match your search."}
-                                </div>
-                            )}
+                            {!loading &&
+                                !error &&
+                                visibleTasks.map((task) => (
+                                    <MyTaskCard key={task.id} task={task} />
+                                ))}
+                            {!loading &&
+                                !error &&
+                                visibleTasks.length === 0 && (
+                                    <div className="rounded-xl border border-dashed border-white/10 py-14 text-center text-sm text-slate-500">
+                                        {tasks.length === 0
+                                            ? "No tasks have been assigned to you yet."
+                                            : "No tasks match your search."}
+                                    </div>
+                                )}
                         </div>
                         {pageCount > 1 && (
                             <div className="mt-5 flex items-center justify-between border-t border-white/10 pt-4">
@@ -235,8 +274,15 @@ function SummaryMetric({
 }) {
     return (
         <div className="rounded-xl border border-white/[0.08] bg-white/[0.04] px-3 py-3">
-            <div className="flex items-center gap-2 text-cyan-300">{icon}<span className="text-[10px] font-semibold uppercase tracking-wider text-slate-500">{label}</span></div>
-            <p className="mt-2 text-2xl font-semibold tracking-tight">{value}</p>
+            <div className="flex items-center gap-2 text-cyan-300">
+                {icon}
+                <span className="text-[10px] font-semibold uppercase tracking-wider text-slate-500">
+                    {label}
+                </span>
+            </div>
+            <p className="mt-2 text-2xl font-semibold tracking-tight">
+                {value}
+            </p>
         </div>
     );
 }
