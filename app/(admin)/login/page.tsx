@@ -274,11 +274,11 @@ const LoginPage = () => {
                         >
                             {success || (isSubmitting ? "Signing in…" : "")}
                         </p>
-                        <p className="mt-8 border-t border-white/10 pt-6 text-xs leading-6 text-slate-400">
+                        <p className="mt-8 border-t border-white/10 pt-6 text-center text-xs leading-6 text-slate-400">
                             Need access? Contact your team administrator.
                         </p>
                     </div>
-                    <div className="flex flex-col gap-2 pt-6">
+                    <div className="flex flex-col gap-2 pt-6 text-center">
                         <p className="font-mono text-[10px] uppercase tracking-[0.16em] text-slate-400">
                             SignalStack / Team workspace
                         </p>
